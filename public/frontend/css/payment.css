@@ -1,0 +1,132 @@
+.header__pay{
+    /* height: 78px; */
+    background-color: #f8f8f8f8;
+    box-shadow: 1px 0 10px rgba(0, 0, 0, 0.144);
+}
+
+.app__container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+}
+
+.form__pay{
+    min-width: 580px;
+    min-height: 200px;
+    background-color: white;
+    border-radius: 3px;
+    box-shadow: 1px 3px 7px rgba(0, 0, 0, 0.096);
+    color: var(--text-color);
+    padding: 18px 28px;
+    padding-bottom: 32px;
+
+}
+
+.pay__heading{
+    font-size: 2.6rem;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #dbdbdb;
+    /* color: var(--text-color); */
+}
+
+.pay__desc{
+    font-size: 1.4rem;
+}
+
+.pay__group{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.pay-group__label{
+    font-size: 1.4rem;
+    font-weight: 500;
+    display: block;
+}
+
+.pay-group__input{
+    height: 34px;
+    display: block;
+    padding: 0 8px;
+    font-size: 1.4rem;
+    border: 1px solid rgb(197, 197, 197);
+    border-radius: 3px;
+}
+
+.pay-group__input:focus{
+    outline: 1px solid var(--primary-yellow);
+}
+
+.pay-group__message{
+    font-size: 1.2rem;
+    display: block;
+}
+
+.pay__buttonlink{
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.pay__buttonlink:hover{
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.pay__button{
+    height: 34px;
+    min-width: 200px;
+    display: block;
+    float: right;
+    padding: 0 8px;
+    font-size: 1.4rem;
+    border: 0;
+    cursor: pointer;
+    background-color: var(--primary-yellow);
+    color: white;
+    font-weight: 500;
+    border-radius: 3px;
+    margin-top: 14px;
+    padding: 0 30px;
+}
+
+.pay__button:focus{
+    outline: 0;
+}
+
+.pay__box{
+    /* min-height: 30px; */
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    /* justify-content: center; */
+}
+
+.pay-group__checkbox{
+    border: 1px solid rgb(197, 197, 197);
+    width: 16px;
+    height: 16px;
+}
+
+.pay-box__message{
+    margin-left: 4px;
+    font-size: 1.4rem;
+    color: var(--text-color)
+}
+
+.spacing{
+    margin: 10px 0;
+    display: block;
+    height: 1px;
+}
+
+#form_payup{
+    /* display: none; */
+}
+
+#form_payin{
+    /* display: none; */
+}

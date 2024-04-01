@@ -1,0 +1,151 @@
+.form__container{
+    background-color: white;
+    box-shadow: 1px 3px 7px rgba(0, 0, 0, 0.096);
+    overflow: hidden;
+}
+
+.app__container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+}
+
+.form__sign{
+    min-width: 380px;
+    min-height: 200px;
+    border-radius: 3px;
+    color: var(--text-color);
+    padding: 0 28px;
+    padding-bottom: 32px;
+    transition: 0.5s;
+}
+
+.form__header{
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.form__group{
+    display: flex;
+    max-width: 380px;
+}
+
+.sign__heading{
+    font-size: 2.2rem;
+    cursor: pointer;
+    /* color: var(--text-color); */
+}
+
+.form-header__underline{
+    position: absolute;
+    display: block;
+    height: 3px;
+    width: 100px;
+    background-color: rgb(100, 226, 197);
+    left: 54px;
+    bottom: -5px;
+    transition: 0.5s;
+}
+
+
+
+.sign__desc{
+    font-size: 1.4rem;
+}
+
+.sign__group{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.sign-group__label{
+    font-size: 1.4rem;
+    font-weight: 500;
+    display: block;
+}
+
+.sign-group__input{
+    height: 34px;
+    display: block;
+    padding: 0 8px;
+    font-size: 1.4rem;
+    border: 1px solid rgb(197, 197, 197);
+    border-radius: 3px;
+}
+
+.sign-group__input:focus{
+    border: 1px solid var(--primary-green);
+    outline: 0;
+}
+
+.sign-group__message{
+    font-size: 1.2rem;
+    display: block;
+}
+
+.sign__button{
+    height: 34px;
+    width: 100%;
+    display: block;
+    padding: 0 8px;
+    font-size: 1.4rem;
+    border: 0;
+    cursor: pointer;
+    background-color: var(--primary-green);
+    color: white;
+    font-weight: 500;
+    border-radius: 3px;
+}
+
+.sign__button:focus{
+    outline: 0;
+}
+
+.sign__box{
+    /* min-height: 30px; */
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    /* justify-content: center; */
+}
+
+.sign-group__checkbox{
+    border: 1px solid rgb(197, 197, 197);
+    width: 16px;
+    height: 16px;
+}
+
+.sign-box__message{
+    margin-left: 4px;
+    font-size: 1.4rem;
+    color: var(--text-color)
+}
+
+.spacing{
+    margin: 10px 0;
+    display: block;
+    height: 1px;
+}
+
+#form_signup{
+    /* display: none; */
+}
+
+#form_signin{
+    /* display: none; */
+}
+
+.transform-left-380px{
+    transform:translateX(-380px);
+}
+
+.transform-right-184px{
+    transform: translateX(184px);
+}
+

@@ -1,0 +1,168 @@
+/* classify */
+
+.classify{
+    margin-bottom: 30px;
+    border-radius: 3px;
+    background-color: white;
+    padding: 0 10px;
+}
+
+.classify__title{
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 20px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.classify__title p{
+    margin: 0;
+}
+
+.classify__title a{
+    color: var(--primary-yellow);
+    text-transform: none;
+    text-decoration: none;
+}
+
+.classify__title a:hover{
+    color: var(--primary-yellow-hover);
+
+    text-decoration: none;
+
+}
+
+.classify__products{
+    /* max-height: 420px; */
+}
+
+.classify__linkproduct{
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.classify__linkproduct:hover{
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.classify__product{
+    width: 100%;
+    min-height: 390px;
+    cursor: pointer;
+    /* border: 1px solid rgb(214, 214, 214); */
+    margin: 15px 0;
+    box-shadow: 1px 2px 5px rgb(221, 221, 221);
+    padding-bottom:20px;
+}
+.classify__product:hover{
+    box-shadow: 1px 2px 7px rgb(184, 158, 118);
+    transition: 0.2s;
+
+}
+
+.classify-product__box{
+    position: relative;
+    width: 100%;
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.classify-product__img{
+    width: 166px;
+    height: 250px;
+    transition: 0.3s;
+}
+.classify__product:hover .classify-product__img{
+    width: 186px;
+    height: 270px;
+    transition: 0.15s;
+}
+
+.classify-product__discount{
+    position: absolute;
+    top: 0px;
+    right: 34px;
+    display: flex;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgb(255, 36, 36);
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    line-height: 1.4rem;
+    font-weight: bold;
+    color: white;
+}
+.classify-product__info{
+    padding: 0 5%;
+}
+
+.classify-product__title{
+    font-size: 1.6rem;
+    font-weight: 500;
+}
+
+.classify-product__author{
+    font-size: 1.2rem;
+    color: var(--primary-purple);
+}
+
+.classify-product__pricebox span{
+    margin-right: 4px;
+}
+
+.classify-pricebox__lastprice{
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: var(--primary-yellow);
+}
+
+.classify-pricebox__originprice{
+    font-size: 1.2rem;
+    text-decoration: line-through;
+    color: #a5a5a5;
+}
+
+.classify-pricebox__discount{
+    font-size: 1.2em;
+    background-color: rgb(255, 36, 36);
+    padding: 2px 4px;
+    color: white;
+}
+
+/* sidebar */
+
+.container__sidebar{
+    background-color: white;
+    padding-bottom: 12px;
+    min-height: 400px;
+}
+
+.sidebar__list{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar__item{
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar__link{
+    color: var(--text-color);
+    font-size: 1.4rem;
+    display: block;
+    width: 100%;
+    padding: 2px 20px;
+    min-height: 30px;
+    /* background-color: red; */
+}
+
+.sidebar__link:hover{
+    color: var(--primary-yellow);
+}

@@ -1,0 +1,48 @@
+.history__table{
+    width: 100%;
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+.history__tr{
+    height: 50px;
+    text-align: center;
+}
+
+.history__tr + .history__tr{
+    border-top: 1px solid rgb(211, 211, 211);
+}
+
+.history__td{
+}
+
+.history__heading{
+    background-color: rgb(77, 77, 77);
+    color: white;
+}
+
+.history__td:first-child{
+    width: 60px;
+}
+
+.history__td:last-child{
+    width: 60px;
+}
+
+.history-heading__title{
+
+}
+
+.history__item{
+
+}
+.history-item__content{
+
+}
+.history-item__link{
+    color: rgb(84, 135, 230);
+    padding: 6px;
+}
+.history-item__link:hover{
+    color: var(--primary-yellow);
+}
