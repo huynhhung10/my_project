@@ -29,7 +29,7 @@ final class Version20240403131658 extends AbstractMigration
             movie_id INT NOT NULL,
             user_id INT NOT NULL,
             review_text VARCHAR(255) NOT NULL,
-            rating VARCHAR(255) NOT NULL,
+            rating INT NOT NULL,
             PRIMARY KEY(id),
             CONSTRAINT FK_reviews_movie_id FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE,
             CONSTRAINT FK_reviews_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
