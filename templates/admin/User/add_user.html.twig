@@ -6,34 +6,28 @@
             <div class="card mb-4">
                 <div class="card-header"><strong>Thêm</strong><span class="small ms-1">Người dùng</span></div>
                     <div class="card-body">
-                        <form class="row g-3" style="padding:20px 20px;">
-                            <div class="col-md-4">
-                                <label for="inputEmail4" class="form-label">Tên người dùng</label>
-                                <input type="text" class="form-control" id="inputAddress">
-                            </div>
+
+                        {{ form_start(form, {'attr': {'class': 'row g-3', 'style': 'padding: 20px 20px'}}) }}
                             <div class="col-md-4">
                                 <label for="inputPassword4" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="inputAddress">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="inputPassword4" class="form-label">SĐT</label>
-                                <input type="text" class="form-control" id="inputAddress">
+                                {{ form_row(form.email) }}
                             </div>
 
                             <div class="col-md-6">
                                 <label for="inputPassword4" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="inputAddress">
+                                {{ form_row(form.username) }}
+                             
+                                
                             </div>
                             <div class="col-md-6">
                                 <label for="inputPassword4" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="inputAddress">
+                           
+                                {{ form_row(form.password) }}
                             </div>
                             <label for="inputAddress" class="form-label">Avatar</label>
                             <div class="input-group mb-3">
-                                
-                             
                                 <input type="file" class="form-control" id="inputGroupFile01">
+                   
                             </div>
                         
                                
@@ -44,12 +38,14 @@
                                 <option>...</option>
                                 </select>
                             </div>
+                       
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary" style="background-color: green">Thêm user</button>
                                 </div>
                             </div>
                             
                         </form>
+                        {{ form_end(form) }}
                     </div>
                 </div>
             </div>

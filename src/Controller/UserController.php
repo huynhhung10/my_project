@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Users;
+use App\Form\UserFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -46,10 +47,16 @@ class UserController extends AbstractController
   #[Route('/admin/adduser', name: 'app_admin_adduser')]
   public function adduser_page(): Response
   {
+    $users = new Users();
+    $form = $this->createForm(UserFormType::class, $users);
+    // $form->handleRequest($request);
+
     return $this->render('admin/User/add_user.html.twig', [
+      'form' => $form->createView(),
       'controller_name' => 'AdminController',
     ]);
   }
+
   #[Route('/admin/edituser', name: 'app_admin_edituser')]
   public function edituser_page(): Response
   {
@@ -70,6 +77,7 @@ class UserController extends AbstractController
   #[Route('/create-user', name: 'create_user')]
   public function create(Request $request)
   {
+
     $requestData = json_decode($request->getContent(), TRUE);
     // $requestData['username'] = "tranminhthuc";
     // $requestData['password'] = "tranminhthuc#123";
