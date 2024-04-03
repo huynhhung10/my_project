@@ -16,17 +16,18 @@ class Reviews
 
     #[ORM\ManyToOne(targetEntity: Movies::class)]
     #[ORM\JoinColumn(name: "movie_id", referencedColumnName: "id")]
-    private ?int $movie_id;
+    private ?int $movie;
 
     #[ORM\ManyToOne(targetEntity: Users::class)]
     #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
-    private ?int $user_id;
+    private ?int $user;
 
+    
     #[ORM\Column(length: 255)]
-    private ?string $review_text = null;
+    private ?string $review_text;
 
-    #[ORM\Column(length: 255)]
-    private ?string $rating= null;
+    #[ORM\Column]
+    private ?int $rating= null;
 
    
     public function getId(): ?int
@@ -34,51 +35,52 @@ class Reviews
         return $this->id;
     }
 
-    public function getMovieId(): ?int
+    public function getMovie(): ?Movies
     {
-        return $this->movie_id;
+        return $this->movie;
     }
 
-    public function setMovieId(int $movie_id): static
+    public function setMovie(?Movies $movie): static
     {
-        $this->movie_id = $movie_id;
-
+        $this->movie = $movie;
         return $this;
     }
 
-    public function getUserId(): ?int
+    public function getUser(): ?Users
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(int $user_id): static
+    public function setUser(?Users $user): static
     {
-        $this->user_id = $user_id;
-
+        $this->user = $user;
         return $this;
     }
 
-    public function getReviewText(): ?string
+   
+    public function getReviewText(): ?int
     {
         return $this->review_text;
     }
 
     public function setReviewText(string $review_text): static
     {
-        $this->review_text = $review_text;
-
+        $this->$review_text = $review_text;
         return $this;
     }
 
-    public function getRating(): ?string
+
+    public function getRating(): ?int
     {
         return $this->rating;
     }
 
-    public function setRating(string $rating): static
+
+    public function setRating(int $rating): static
     {
         $this->rating = $rating;
 
         return $this;
     }
+    
 }

@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Reviews;
+use App\Entity\Users;
+use App\Entity\Movies;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,7 +32,7 @@ class ReviewController extends AbstractController {
   public function __construct(EntityManagerInterface $em) {
     $this->em = $em;
   }
-
+  
   /**
  * Inheric docs.
  */
@@ -43,21 +45,23 @@ class ReviewController extends AbstractController {
     /**
    * Create review.
    */
-    #[Route('/create-review', name: 'create_review')]
+    #[Route('/create-review', name: 'create_review', methods: ['GET', 'POST'])]
     public function create(Request $request) {
       $requestData = json_decode($request->getContent(), TRUE);
       if (isset($requestData['movie_id']) || isset($requestData['user_id']) || isset($requestData['review_text'])|| isset($requestData['rating'])) {
         $review = new Reviews();
-        $review->setMovieId($requestData['movie_id']);
-        $review->setUserId($requestData['user_id']);
+        $movie = $this->em->getRepository(Movies::class)->find($requestData['movie_id']);
+        $user = $this->em->getRepository(Users::class)->find($requestData['user_id']);
+        $review->setMovie($movie);
+        $review->setUser($user);
         $review->setReviewText($requestData['review_text']);
         $review->setRating($requestData['rating']);
         $this->em->persist($review);
         $this->em->flush();
         $reviewData = [
             'id' => $review->getId(),
-            'movie_id' => $review->getMovieId(),
-            'review_id' => $review->getUserId(),
+            'movie_id' => $review->getMovie()->getId(),
+            'review_id' => $review->getUser()->getId(),
             'review_text' => $review->getReviewText(),
             'rating' => $review->getRating(),
         ];
@@ -73,20 +77,21 @@ class ReviewController extends AbstractController {
     /**
    * Update review.
    */
-    #[Route('/update-review/{id}', name: 'update_review')]
+    #[Route('/update-review/{id}', name: 'update_review', methods: ['GET', 'POST'])]
     public function update(Request $request, int $id): Response {
       $review = $this->em->getRepository(Reviews::class)->find($id);
       if ($review === NULL) {
         return new Response('review not found', Response::HTTP_NOT_FOUND);
       }
       $requestData = json_decode($request->getContent(), TRUE);
-      
       if (!empty($requestData)) {
         if (isset($requestData['movie_id'])) {
-          $review->setMovieId($requestData['movie_id']);
+          $movie = $this->em->getRepository(Movies::class)->find($requestData['movie_id']);
+          $review->setMovie($movie);
         }
         if ( isset($requestData['user_id'])) {
-          $review->setUserId($requestData['user_id']);
+          $user = $this->em->getRepository(Users::class)->find($requestData['user_id']);
+          $review->setUser($user);
         }
         if (isset($requestData['review_text'])) {
           $review->setReviewText($requestData['review_text']);
@@ -100,8 +105,8 @@ class ReviewController extends AbstractController {
         $this->em->flush();
         $reviewData = [
             'id' => $review->getId(),
-            'movie_id' => $review->getMovieId(),
-            'review_id' => $review->getUserId(),
+            'movie_id' => $review->getMovie()->getId(),
+            'review_id' => $review->getUser()->getId(),
             'review_text' => $review->getReviewText(),
             'rating' => $review->getRating(),
         ];
@@ -117,7 +122,7 @@ class ReviewController extends AbstractController {
     /**
    * Update review.
    */
-    #[Route('/delete-review/{id}', name: 'delete_review')]
+    #[Route('/delete-review/{id}', name: 'delete_review', methods: ['GET', 'POST'])]
     public function delete(int $id): Response {
       $review = $this->em->getRepository(reviews::class)->find($id);
       if ($review === NULL) {
