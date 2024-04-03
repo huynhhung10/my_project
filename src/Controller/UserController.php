@@ -12,17 +12,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    private $entityManager;
+    private $em;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
+        $this->em = $entityManager;
     }
 
     #[Route('/user', name: 'user')]
     public function indexUser(): Response
     {
-        $users = $this->entityManager->getRepository(Users::class)->findAll();
+        $users = $this->em->getRepository(Users::class)->findAll();
         return new Response(sprintf('Total users: %d', count($users)));
     }
 
@@ -37,8 +37,8 @@ class UserController extends AbstractController
             $user->setPassword($requestData['password']);
             $user->setEmail($requestData['email']);
 
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
+            $this->em->persist($user);
+            $this->em->flush();
 
             $userJson = $this->serializeUser($user);
             return new JsonResponse($userJson);
@@ -50,7 +50,7 @@ class UserController extends AbstractController
     #[Route('/update-user/{id}', name: 'update_user', methods: ['GET', 'PUT'])]
     public function updateUser(Request $request, int $id): Response
     {
-        $user = $this->entityManager->getRepository(Users::class)->find($id);
+        $user = $this->em->getRepository(Users::class)->find($id);
 
         if (!$user) {
             return new Response('User not found', Response::HTTP_NOT_FOUND);
@@ -69,7 +69,7 @@ class UserController extends AbstractController
                 $user->setPassword($requestData['password']);
             }
 
-            $this->entityManager->flush();
+            $this->em->flush();
 
             $userJson = $this->serializeUser($user);
             return new JsonResponse($userJson);
@@ -81,14 +81,14 @@ class UserController extends AbstractController
     #[Route('/delete-user/{id}', name: 'delete_user', methods: ['GET', 'DELETE'])]
     public function deleteUser(int $id): Response
     {
-        $user = $this->entityManager->getRepository(Users::class)->find($id);
+        $user = $this->em->getRepository(Users::class)->find($id);
 
         if (!$user) {
             return new Response('User not found', Response::HTTP_NOT_FOUND);
         }
 
-        $this->entityManager->remove($user);
-        $this->entityManager->flush();
+        $this->em->remove($user);
+        $this->em->flush();
 
         return new Response('User deleted successfully', Response::HTTP_OK);
     }

@@ -13,17 +13,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MovieController extends AbstractController
 {
-    private $entityManager;
+    private $em;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
+        $this->em = $entityManager;
     }
 
     #[Route('/movies', name: 'movies')]
     public function indexMovie(): JsonResponse
     {
-        $movies = $this->entityManager->getRepository(Movies::class)->findAll();
+        $movies = $this->em->getRepository(Movies::class)->findAll();
         $movies_json = [];
         foreach($movies as $movie) {
             $movies_json[] = $this->serializeMovie($movie);
@@ -38,14 +38,14 @@ class MovieController extends AbstractController
 
         if (isset($requestData['title']) && isset($requestData['genre_id'])) {
             $movie = new Movies();
-            $genre = $this->entityManager->getRepository(Genres::class)->find($requestData['genre_id']);
+            $genre = $this->em->getRepository(Genres::class)->find($requestData['genre_id']);
             if(!$genre) {
                 return new Response('genre not found', Response::HTTP_NOT_FOUND);
             }
             $movie->setTitle($requestData['title']);
             $movie->setGenreId($genre);
-            $this->entityManager->persist($movie);
-            $this->entityManager->flush();
+            $this->em->persist($movie);
+            $this->em->flush();
 
             $movieJson = $this->serializeMovie($movie);
             return new JsonResponse($movieJson);
@@ -57,28 +57,28 @@ class MovieController extends AbstractController
     #[Route('/update-movie/{id}', name: 'update_movie', methods: ['GET', 'PUT'])]
     public function updateMovie(Request $request, int $id): Response
     {
-        $movie = $this->entityManager->getRepository(Movies::class)->find($id);
+        $movie = $this->em->getRepository(Movies::class)->find($id);
         
         if (!$movie) {
             return new Response('Movie not found', Response::HTTP_NOT_FOUND);
         }
 
         $requestData = json_decode($request->getContent(), true);
-        // $requestData['title'] = "update lan 1";
+        // $requestData['title'] = "update lan 2";
         // $requestData['genre_id'] = 2;
         if (!empty($requestData)) {
             if (isset($requestData['title'])) {
                 $movie->setTitle($requestData['title']);
             }
             if (isset($requestData['genre_id'])) {
-                $genre = $this->entityManager->getRepository(Genres::class)->find($requestData['genre_id']);
+                $genre = $this->em->getRepository(Genres::class)->find($requestData['genre_id']);
                 if(!$genre) {
                     return new Response('genre not found', Response::HTTP_NOT_FOUND);
                 }
                 $movie->setGenreId($genre);
             }
 
-            $this->entityManager->flush();
+            $this->em->flush();
 
             $movieJson = $this->serializeMovie($movie);
             return new JsonResponse($movieJson);
@@ -90,14 +90,14 @@ class MovieController extends AbstractController
     #[Route('/delete-movie/{id}', name: 'delete_movie', methods: ['GET', 'DELETE'])]
     public function deleteMovie(int $id): Response
     {
-        $movie = $this->entityManager->getRepository(Movies::class)->find($id);
+        $movie = $this->em->getRepository(Movies::class)->find($id);
 
         if (!$movie) {
             return new Response('Movie not found', Response::HTTP_NOT_FOUND);
         }
 
-        $this->entityManager->remove($movie);
-        $this->entityManager->flush();
+        $this->em->remove($movie);
+        $this->em->flush();
 
         return new Response('Movie deleted successfully', Response::HTTP_OK);
     }
