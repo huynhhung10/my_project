@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Movies;
+use App\Entity\Genres;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,10 +21,14 @@ class MovieController extends AbstractController
     }
 
     #[Route('/movies', name: 'movies')]
-    public function indexMovie(): Response
+    public function indexMovie(): JsonResponse
     {
         $movies = $this->entityManager->getRepository(Movies::class)->findAll();
-        return new Response(sprintf('Total movies: %d', count($movies)));
+        $movies_json = [];
+        foreach($movies as $movie) {
+            $movies_json[] = $this->serializeMovie($movie);
+        }
+        return new JsonResponse($movies_json);
     }
 
     #[Route('/create-movie', name: 'create_movie', methods: ['GET', 'POST'])]
@@ -31,10 +36,14 @@ class MovieController extends AbstractController
     {
         $requestData = json_decode($request->getContent(), true);
 
-        if (isset($requestData['title']) && isset($requestData['release_date']) && isset($requestData['genre_id'])) {
+        if (isset($requestData['title']) && isset($requestData['genre_id'])) {
             $movie = new Movies();
+            $genre = $this->entityManager->getRepository(Genres::class)->find($requestData['genre_id']);
+            if(!$genre) {
+                return new Response('genre not found', Response::HTTP_NOT_FOUND);
+            }
             $movie->setTitle($requestData['title']);
-            $movie->setGenreId($requestData['genre_id']);
+            $movie->setGenreId($genre);
             $this->entityManager->persist($movie);
             $this->entityManager->flush();
 
@@ -49,22 +58,24 @@ class MovieController extends AbstractController
     public function updateMovie(Request $request, int $id): Response
     {
         $movie = $this->entityManager->getRepository(Movies::class)->find($id);
-
+        
         if (!$movie) {
             return new Response('Movie not found', Response::HTTP_NOT_FOUND);
         }
 
         $requestData = json_decode($request->getContent(), true);
-
+        // $requestData['title'] = "update lan 1";
+        // $requestData['genre_id'] = 2;
         if (!empty($requestData)) {
             if (isset($requestData['title'])) {
                 $movie->setTitle($requestData['title']);
             }
-            if (isset($requestData['release_date'])) {
-                $movie->setReleaseDate($requestData['release_date']);
-            }
             if (isset($requestData['genre_id'])) {
-                $movie->setGenreId($requestData['genre_id']);
+                $genre = $this->entityManager->getRepository(Genres::class)->find($requestData['genre_id']);
+                if(!$genre) {
+                    return new Response('genre not found', Response::HTTP_NOT_FOUND);
+                }
+                $movie->setGenreId($genre);
             }
 
             $this->entityManager->flush();
@@ -96,7 +107,10 @@ class MovieController extends AbstractController
         return [
             'id' => $movie->getId(),
             'title' => $movie->getTitle(),
-            'genre_id' => $movie->getGenreId(),
+            'genre' => [
+                'id' => $movie->getGenreId()->getId(),
+                'name' => $movie->getGenreId()->getName(),
+            ]
         ];
     }
 }
