@@ -37,6 +37,7 @@ class UserFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Users::class,
+            'csrf_protection' => true,
         ]);
     }
 }

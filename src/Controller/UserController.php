@@ -44,16 +44,34 @@ class UserController extends AbstractController
     $users = $this->em->getRepository(Users::class)->findAll();
     return new Response(sprintf('id new permission is %d', $users));
   }
+  #[Route('/admin/alluser', name: 'app_admin_alluser')]
+  public function listuser_page(): Response
+  {
+    $users = $this->em->getRepository(Users::class)->findAll();
+    return $this->render('admin/User/all_user.html.twig', [
+      'controller_name' => 'UserController',
+      'users' => $users,
+    ]);
+  }
 
   #[Route('/admin/adduser', name: 'app_admin_adduser')]
-  public function adduser_page(): Response
+  public function adduser_page(Request $request): Response
   {
     $users = new Users();
     $form = $this->createForm(UserFormType::class, $users);
     // $form->handleRequest($request);
 
+    $form->handleRequest($request);
+    if ($form->isSubmitted() && $form->isValid()) {
+
+      $entityManager = $this->em;
+      $entityManager->persist($users);
+      $entityManager->flush();
+      $this->addFlash('success', 'Product created successfully!');
+    }
+
     return $this->render('admin/User/add_user.html.twig', [
-      'form' => $form->createView(),
+      'adduser' => $form->createView(),
       'controller_name' => 'UserController',
     ]);
   }
@@ -65,15 +83,7 @@ class UserController extends AbstractController
       'controller_name' => 'UserController',
     ]);
   }
-  #[Route('/admin/alluser', name: 'app_admin_alluser')]
-  public function listuser_page(): Response
-  {
-    $users = $this->em->getRepository(Users::class)->findAll();
-    return $this->render('admin/User/all_user.html.twig', [
-      'controller_name' => 'UserController',
-      'users' => $users,
-    ]);
-  }
+
   /**
    * Create user.
    */

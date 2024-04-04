@@ -65,14 +65,14 @@ class MovieController extends AbstractController
   #[Route('/admin/editmovie', name: 'app_admin_editmovie')]
   public function editmovie_page(): Response
   {
-    return $this->render('admin/Review/edit_movie.html.twig', [
+    return $this->render('admin/Movies/edit_movie.html.twig', [
       'controller_name' => 'AdminController',
     ]);
   }
   #[Route('/admin/allmovie', name: 'app_admin_allmovie')]
   public function listmovie_page(): Response
   {
-    return $this->render('admin/Movie/all_movie.html.twig', [
+    return $this->render('admin/Movies/all_movie.html.twig', [
       'controller_name' => 'AdminController',
     ]);
   }
