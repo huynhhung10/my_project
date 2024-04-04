@@ -9,25 +9,26 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Inheric docs.
+ * User Controller.
  */
 class UserController extends AbstractController
 {
+
   /**
    * Entity manager.
    *
-   * @var \Doctrine\ORM\EntityManagerInterface The entity manager instance It manages the database interactionsManages database interactions
+   * @var \Doctrine\ORM\EntityManagerInterface
    */
   private $em;
 
   /**
    * Constructor.
    *
-   * @param \Doctrine\ORM\EntityManagerInterface $em
-   *   The entity manager instance to manage database interactions.
+   * @param \Doctrine\ORM\EntityManagerInterface $entityManager
+   *   The entity manager instance.
    */
   public function __construct(EntityManagerInterface $em)
   {
@@ -37,7 +38,7 @@ class UserController extends AbstractController
   /**
    * Inheric docs.
    */
-  #[Route('/user', name: 'user')]
+  #[Route('/users', name: 'user')]
   public function index(): Response
   {
     $users = $this->em->getRepository(Users::class)->findAll();
@@ -52,8 +53,8 @@ class UserController extends AbstractController
     // $form->handleRequest($request);
 
     return $this->render('admin/User/add_user.html.twig', [
-      'form' => $form->createView(),
-      'controller_name' => 'AdminController',
+      'adduser' => $form->createView(),
+      'controller_name' => 'UserController',
     ]);
   }
 
@@ -61,39 +62,43 @@ class UserController extends AbstractController
   public function edituser_page(): Response
   {
     return $this->render('admin/User/edit_user.html.twig', [
-      'controller_name' => 'AdminController',
+      'controller_name' => 'UserController',
     ]);
   }
   #[Route('/admin/alluser', name: 'app_admin_alluser')]
   public function listuser_page(): Response
   {
+    $users = $this->em->getRepository(Users::class)->findAll();
     return $this->render('admin/User/all_user.html.twig', [
-      'controller_name' => 'AdminController',
+      'controller_name' => 'UserController',
+      'users' => $users,
     ]);
   }
   /**
    * Create user.
    */
   #[Route('/create-user', name: 'create_user')]
-  public function create(Request $request)
+  public function create(Request $request): Response
   {
 
-    $requestData = json_decode($request->getContent(), TRUE);
     // $requestData['username'] = "tranminhthuc";
     // $requestData['password'] = "tranminhthuc#123";
     // $requestData['email'] = "tranminhthuc@gmail.com";
-    if (isset($requestData['username']) || isset($requestData['password']) || isset($requestData['email'])) {
-      $user = new Users();
-      $user->setUsername($requestData['username']);
-      $user->setPassword($requestData['password']);
-      $user->setEmail($requestData['email']);
-      $this->em->persist($user);
-      $this->em->flush();
-      $userJson = $this->serializeUser($user);
-      return new JsonResponse($userJson);
-    } else {
-      return new Response('Invalid user data', Response::HTTP_BAD_REQUEST);
+    $user = new Users();
+    $form = $this->createForm(UserFormType::class, $user);
+
+    $form->handleRequest($request);
+    if ($form->isSubmitted() && $form->isValid()) {
+      $entityManager = $this->em->getManager();
+      $entityManager->persist($user);
+      $entityManager->flush();
+
+      return $this->redirectToRoute('admin/alluser');
     }
+
+    return $this->render('admin/User/all_user.html.twig', [
+      'adduser' => $form->createView(),
+    ]);
   }
 
   /**
