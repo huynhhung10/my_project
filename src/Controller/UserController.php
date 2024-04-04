@@ -38,7 +38,7 @@ class UserController extends AbstractController
   /**
    * Inheric docs.
    */
-  #[Route('/users', name: 'user')]
+  #[Route('/user', name: 'user')]
   public function index(): Response
   {
     $users = $this->em->getRepository(Users::class)->findAll();
@@ -53,7 +53,7 @@ class UserController extends AbstractController
     // $form->handleRequest($request);
 
     return $this->render('admin/User/add_user.html.twig', [
-      'adduser' => $form->createView(),
+      'form' => $form->createView(),
       'controller_name' => 'UserController',
     ]);
   }
@@ -78,27 +78,25 @@ class UserController extends AbstractController
    * Create user.
    */
   #[Route('/create-user', name: 'create_user')]
-  public function create(Request $request): Response
+  public function create(Request $request)
   {
 
+    $requestData = json_decode($request->getContent(), TRUE);
     // $requestData['username'] = "tranminhthuc";
     // $requestData['password'] = "tranminhthuc#123";
     // $requestData['email'] = "tranminhthuc@gmail.com";
-    $user = new Users();
-    $form = $this->createForm(UserFormType::class, $user);
-
-    $form->handleRequest($request);
-    if ($form->isSubmitted() && $form->isValid()) {
-      $entityManager = $this->em->getManager();
-      $entityManager->persist($user);
-      $entityManager->flush();
-
-      return $this->redirectToRoute('admin/alluser');
+    if (isset($requestData['username']) || isset($requestData['password']) || isset($requestData['email'])) {
+      $user = new Users();
+      $user->setUsername($requestData['username']);
+      $user->setPassword($requestData['password']);
+      $user->setEmail($requestData['email']);
+      $this->em->persist($user);
+      $this->em->flush();
+      $userJson = $this->serializeUser($user);
+      return new JsonResponse($userJson);
+    } else {
+      return new Response('Invalid user data', Response::HTTP_BAD_REQUEST);
     }
-
-    return $this->render('admin/User/all_user.html.twig', [
-      'adduser' => $form->createView(),
-    ]);
   }
 
   /**

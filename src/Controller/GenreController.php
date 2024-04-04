@@ -13,7 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Genre class.
  */
-class GenreController extends AbstractController {
+class GenreController extends AbstractController
+{
 
   /**
    * Entity manager.
@@ -28,24 +29,54 @@ class GenreController extends AbstractController {
    * @param \Doctrine\ORM\EntityManagerInterface $entityManager
    *   The entity manager instance.
    */
-  public function __construct(EntityManagerInterface $entityManager) {
+  public function __construct(EntityManagerInterface $entityManager)
+  {
     $this->em = $entityManager;
   }
 
   /**
-  * Show all genres.
-  */
+   * Show all genres.
+   */
   #[Route('/genres', name: 'genres')]
-  public function indexGenre(): Response {
+  public function indexGenre(): Response
+  {
     $genres = $this->em->getRepository(Genres::class)->findAll();
     return new Response(sprintf('Total genres: %d', count($genres)));
   }
 
+  #[Route('/admin/addgenres', name: 'app_admin_addgenres')]
+  public function addgenres_page(): Response
+  {
+    $users = new Genres();
+    $form = $this->createForm(UserFormType::class, $users);
+    // $form->handleRequest($request);
+
+    return $this->render('admin/Genres/add_genres.html.twig', [
+      'form' => $form->createView(),
+      'controller_name' => 'AdminController',
+    ]);
+  }
+
+  #[Route('/admin/editgenres', name: 'app_admin_editgenres')]
+  public function editgenres_page(): Response
+  {
+    return $this->render('admin/Genres/edit_genres.html.twig', [
+      'controller_name' => 'AdminController',
+    ]);
+  }
+  #[Route('/admin/allgenres', name: 'app_admin_allgenres')]
+  public function listgenres_page(): Response
+  {
+    return $this->render('admin/Genres/all_genres.html.twig', [
+      'controller_name' => 'AdminController',
+    ]);
+  }
   /**
-  * Creates a new Genre.
-  */
+   * Creates a new Genre.
+   */
   #[Route('/create-genre', name: 'create_genre', methods: ['GET', 'POST'])]
-  public function createGenre(Request $request): Response {
+  public function createGenre(Request $request): Response
+  {
     $requestData = json_decode($request->getContent(), TRUE);
 
     if (isset($requestData['name'])) {
@@ -55,17 +86,17 @@ class GenreController extends AbstractController {
       $this->em->flush();
       $genreJson = $this->serializeGenre($genre);
       return new JsonResponse($genreJson);
-    }
-    else {
+    } else {
       return new Response('Invalid genre data', Response::HTTP_BAD_REQUEST);
     }
   }
 
   /**
-  * Update a Genre.
-  */
+   * Update a Genre.
+   */
   #[Route('/update-genre/{id}', name: 'update_genre', methods: ['GET', 'PUT'])]
-  public function updateGenre(Request $request, int $id): Response {
+  public function updateGenre(Request $request, int $id): Response
+  {
     $genre = $this->em->getRepository(Genres::class)->find($id);
 
     if (!$genre) {
@@ -81,17 +112,17 @@ class GenreController extends AbstractController {
       $this->em->flush();
       $genreJson = $this->serializeGenre($genre);
       return new JsonResponse($genreJson);
-    }
-    else {
+    } else {
       return new Response('Invalid genre data', Response::HTTP_BAD_REQUEST);
     }
   }
 
   /**
-  * Delete a genre.
-  */
+   * Delete a genre.
+   */
   #[Route('/delete-genre/{id}', name: 'delete_genre', methods: ['GET', 'DELETE'])]
-  public function deleteGenre(int $id): Response {
+  public function deleteGenre(int $id): Response
+  {
     $genre = $this->em->getRepository(Genres::class)->find($id);
 
     if (!$genre) {
@@ -107,11 +138,11 @@ class GenreController extends AbstractController {
   /**
    * Serializes the Genre.
    */
-  private function serializeGenre(Genres $genre): array {
+  private function serializeGenre(Genres $genre): array
+  {
     return [
       'id' => $genre->getId(),
       'name' => $genre->getName(),
     ];
   }
-
 }

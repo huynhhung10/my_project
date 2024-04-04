@@ -14,7 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Movie class.
  */
-class MovieController extends AbstractController {
+class MovieController extends AbstractController
+{
 
   /**
    * Entity manager.
@@ -29,15 +30,17 @@ class MovieController extends AbstractController {
    * @param \Doctrine\ORM\EntityManagerInterface $entityManager
    *   The entity manager instance.
    */
-  public function __construct(EntityManagerInterface $entityManager) {
+  public function __construct(EntityManagerInterface $entityManager)
+  {
     $this->em = $entityManager;
   }
 
   /**
- * Show all movies.
- */
+   * Show all movies.
+   */
   #[Route('/movies', name: 'movies')]
-  public function indexMovie(): JsonResponse {
+  public function indexMovie(): JsonResponse
+  {
     $movies = $this->em->getRepository(Movies::class)->findAll();
     $movies_json = [];
     foreach ($movies as $movie) {
@@ -46,11 +49,39 @@ class MovieController extends AbstractController {
     return new JsonResponse($movies_json);
   }
 
+  #[Route('/admin/addmovie', name: 'app_admin_addmovie')]
+  public function addmovie_page(): Response
+  {
+    $users = new Movies();
+    $form = $this->createForm(UserFormType::class, $users);
+    // $form->handleRequest($request);
+
+    return $this->render('admin/Movies/add_movie.html.twig', [
+      'form' => $form->createView(),
+      'controller_name' => 'AdminController',
+    ]);
+  }
+
+  #[Route('/admin/editmovie', name: 'app_admin_editmovie')]
+  public function editmovie_page(): Response
+  {
+    return $this->render('admin/Review/edit_movie.html.twig', [
+      'controller_name' => 'AdminController',
+    ]);
+  }
+  #[Route('/admin/allmovie', name: 'app_admin_allmovie')]
+  public function listmovie_page(): Response
+  {
+    return $this->render('admin/Movie/all_movie.html.twig', [
+      'controller_name' => 'AdminController',
+    ]);
+  }
   /**
-  * Create a new movie.
-  */
+   * Create a new movie.
+   */
   #[Route('/create-movie', name: 'create_movie', methods: ['GET', 'POST'])]
-  public function createMovie(Request $request): Response {
+  public function createMovie(Request $request): Response
+  {
     $requestData = json_decode($request->getContent(), TRUE);
 
     if (isset($requestData['title']) && isset($requestData['genre_id'])) {
@@ -66,17 +97,17 @@ class MovieController extends AbstractController {
 
       $movieJson = $this->serializeMovie($movie);
       return new JsonResponse($movieJson);
-    }
-    else {
+    } else {
       return new Response('Invalid movie data', Response::HTTP_BAD_REQUEST);
     }
   }
 
   /**
-  * Update a movie.
-  */
+   * Update a movie.
+   */
   #[Route('/update-movie/{id}', name: 'update_movie', methods: ['GET', 'PUT'])]
-  public function updateMovie(Request $request, int $id): Response {
+  public function updateMovie(Request $request, int $id): Response
+  {
     $movie = $this->em->getRepository(Movies::class)->find($id);
 
     if (!$movie) {
@@ -102,17 +133,17 @@ class MovieController extends AbstractController {
 
       $movieJson = $this->serializeMovie($movie);
       return new JsonResponse($movieJson);
-    }
-    else {
+    } else {
       return new Response('Invalid movie data', Response::HTTP_BAD_REQUEST);
     }
   }
 
   /**
-  * Delete a movie.
-  */
+   * Delete a movie.
+   */
   #[Route('/delete-movie/{id}', name: 'delete_movie', methods: ['GET', 'DELETE'])]
-  public function deleteMovie(int $id): Response {
+  public function deleteMovie(int $id): Response
+  {
     $movie = $this->em->getRepository(Movies::class)->find($id);
 
     if (!$movie) {
@@ -128,7 +159,8 @@ class MovieController extends AbstractController {
   /**
    * Serialize Movie.
    */
-  private function serializeMovie(Movies $movie): array {
+  private function serializeMovie(Movies $movie): array
+  {
     return [
       'id' => $movie->getId(),
       'title' => $movie->getTitle(),
@@ -138,5 +170,4 @@ class MovieController extends AbstractController {
       ],
     ];
   }
-
 }
