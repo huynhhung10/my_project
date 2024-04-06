@@ -53,7 +53,7 @@ class UserController extends AbstractController
     // $form->handleRequest($request);
 
     return $this->render('admin/User/add_user.html.twig', [
-      'form' => $form->createView(),
+      'adduser' => $form->createView(),
       'controller_name' => 'UserController',
     ]);
   }
