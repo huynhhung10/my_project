@@ -17,7 +17,7 @@ class Movies
     private ?string $title = null;
 
     #[ORM\ManyToOne(inversedBy: 'movies')]
-    private ?Genres $genre_id = null;
+    private ?Genres $Genre = null;
 
     public function getId(): ?int
     {
@@ -36,14 +36,14 @@ class Movies
         return $this;
     }
 
-    public function getGenreId(): ?Genres
+    public function getGenre(): ?Genres
     {
-        return $this->genre_id;
+        return $this->Genre;
     }
 
-    public function setGenreId(?Genres $genre_id): static
+    public function setGenre(?Genres $Genre): static
     {
-        $this->genre_id = $genre_id;
+        $this->Genre = $Genre;
 
         return $this;
     }

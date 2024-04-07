@@ -1,26 +1,26 @@
 {% extends 'adminDashboard.html.twig' %}
 {% block body %}
-    {% if app.flashes('insert') is not empty %}
+    {% if app.flashes('insert_cus') is not empty %}
         <script>
             window.onload = function() {
                 alert("Thêm khách hàng thành công !");
-                {% do app.session.flashBag.clear('success') %}
+                {% do app.session.flashBag.clear('insert_cus') %}
             };
         </script>
     {% endif %}
-    {% if app.flashes('update') is not empty %}
+    {% if app.flashes('update_cus') is not empty %}
         <script>
             window.onload = function() {
                 alert("Cập nhật thông tin khách hàng thành công !");
-                {% do app.session.flashBag.clear('update') %}
+                {% do app.session.flashBag.clear('update_cus') %}
             };
         </script>
     {% endif %}
-    {% if app.flashes('delete') is not empty %}
+    {% if app.flashes('delete_cus') is not empty %}
         <script>
             window.onload = function() {
                 alert("Xóa khách hàng thành công !");
-                {% do app.session.flashBag.clear('delete') %}
+                {% do app.session.flashBag.clear('delete_cus') %}
             };
         </script>
     {% endif %}
@@ -56,7 +56,7 @@
                                     <tbody>
                                         {% for customer in customers %}
                                         <tr>
-                                            <td>{{ customer.id }}</td>
+                                            <td>{{ loop.index }}</td>
                                             <td>
                                                 <img src="{{ customer.img }}" alt="Avatar" style="width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
                                             </td>

@@ -34,7 +34,7 @@ class CustomerController extends AbstractController {
   /**
   * Show customers.
   */
-  #[Route('/customers', name: 'customers')]
+  #[Route('admin/customers', name: 'customers')]
   public function index(): Response {
     $customers = $this->em->getRepository(Customers::class)->findAll();
     return $this->render('customer/index.html.twig', [
@@ -54,7 +54,7 @@ class CustomerController extends AbstractController {
       $this->em->persist($customer);
       $this->em->flush();
 
-      $this->addFlash('insert', 'true');
+      $this->addFlash('insert_cus', 'true');
       return $this->redirectToRoute('customers');
     }
     return $this->render('customer/customer.html.twig', [
@@ -75,7 +75,7 @@ class CustomerController extends AbstractController {
       $this->em->persist($customer);
       $this->em->flush();
 
-      $this->addFlash('update', 'true');
+      $this->addFlash('update_cus', 'true');
       return $this->redirectToRoute('customers');
     }
     return $this->render('customer/customer.html.twig', [
@@ -93,7 +93,7 @@ class CustomerController extends AbstractController {
       $this->em->remove($customer);
       $this->em->flush();
 
-      $this->addFlash('delete', 'true');
+      $this->addFlash('delete_cus', 'true');
       return $this->redirectToRoute('customers');
     }
     return new Response('Invalid customer data', Response::HTTP_BAD_REQUEST);

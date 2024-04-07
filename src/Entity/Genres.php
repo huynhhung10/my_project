@@ -18,7 +18,7 @@ class Genres
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(targetEntity: Movies::class, mappedBy: 'genre_id')]
+    #[ORM\OneToMany(targetEntity: Movies::class, mappedBy: 'Genre')]
     private Collection $movies;
 
     public function __construct()
@@ -62,7 +62,7 @@ class Genres
     {
         if (!$this->movies->contains($movie)) {
             $this->movies->add($movie);
-            $movie->setGenreId($this);
+            $movie->setGenre($this);
         }
 
         return $this;
@@ -72,11 +72,12 @@ class Genres
     {
         if ($this->movies->removeElement($movie)) {
             // set the owning side to null (unless already changed)
-            if ($movie->getGenreId() === $this) {
-                $movie->setGenreId(null);
+            if ($movie->getGenre() === $this) {
+                $movie->setGenre(null);
             }
         }
 
         return $this;
     }
+
 }

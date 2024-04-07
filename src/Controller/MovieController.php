@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Genres;
 use App\Entity\Movies;
+use App\Form\MoviesFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,160 +15,88 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Movie class.
  */
-class MovieController extends AbstractController
-{
-
+class MovieController extends AbstractController{
   /**
    * Entity manager.
    *
-   * @var \Doctrine\ORM\EntityManagerInterface
+   * @var \Doctrine\ORM\EntityManagerInterface The entity manager instance It manages the database interactionsManages database interactions
    */
   private $em;
 
   /**
    * Constructor.
    *
-   * @param \Doctrine\ORM\EntityManagerInterface $entityManager
-   *   The entity manager instance.
+   * @param \Doctrine\ORM\EntityManagerInterface $em
+   *   The entity manager instance to manage database interactions.
    */
-  public function __construct(EntityManagerInterface $entityManager)
-  {
-    $this->em = $entityManager;
+  public function __construct(EntityManagerInterface $em) {
+    $this->em = $em;
   }
 
   /**
-   * Show all movies.
-   */
-  #[Route('/movies', name: 'movies')]
-  public function indexMovie(): JsonResponse
-  {
+  * Show Movies.
+  */
+  #[Route('admin/movies', name: 'movies')]
+  public function index(): Response {
     $movies = $this->em->getRepository(Movies::class)->findAll();
-    $movies_json = [];
-    foreach ($movies as $movie) {
-      $movies_json[] = $this->serializeMovie($movie);
-    }
-    return new JsonResponse($movies_json);
-  }
-
-  #[Route('/admin/addmovie', name: 'app_admin_addmovie')]
-  public function addmovie_page(): Response
-  {
-    $users = new Movies();
-    $form = $this->createForm(UserFormType::class, $users);
-    // $form->handleRequest($request);
-
-    return $this->render('admin/Movies/add_movie.html.twig', [
-      'form' => $form->createView(),
-      'controller_name' => 'AdminController',
+    return $this->render('movie/index.html.twig', [
+      'movies' => $movies,
     ]);
   }
 
-  #[Route('/admin/editmovie', name: 'app_admin_editmovie')]
-  public function editmovie_page(): Response
-  {
-    return $this->render('admin/Movies/edit_movie.html.twig', [
-      'controller_name' => 'AdminController',
-    ]);
-  }
-  #[Route('/admin/allmovie', name: 'app_admin_allmovie')]
-  public function listmovie_page(): Response
-  {
-    return $this->render('admin/Movies/all_movie.html.twig', [
-      'controller_name' => 'AdminController',
-    ]);
-  }
   /**
-   * Create a new movie.
-   */
-  #[Route('/create-movie', name: 'create_movie', methods: ['GET', 'POST'])]
-  public function createMovie(Request $request): Response
-  {
-    $requestData = json_decode($request->getContent(), TRUE);
-
-    if (isset($requestData['title']) && isset($requestData['genre_id'])) {
-      $movie = new Movies();
-      $genre = $this->em->getRepository(Genres::class)->find($requestData['genre_id']);
-      if (!$genre) {
-        return new Response('genre not found', Response::HTTP_NOT_FOUND);
-      }
-      $movie->setTitle($requestData['title']);
-      $movie->setGenreId($genre);
+  * Create customer.
+  */
+  #[Route('/admin/create-movie', name: 'create-movie')]
+  public function createMovie(Request $request) {
+    $movie = new Movies();
+    $form = $this->createForm(MoviesFormType::class, $movie);
+    $form->handleRequest($request);
+    if ($form->isSubmitted() && $form->isValid()) {
       $this->em->persist($movie);
       $this->em->flush();
 
-      $movieJson = $this->serializeMovie($movie);
-      return new JsonResponse($movieJson);
-    } else {
-      return new Response('Invalid movie data', Response::HTTP_BAD_REQUEST);
+      $this->addFlash('insert_movie', 'true');
+      return $this->redirectToRoute('movies');
     }
+    return $this->render('movie/movie.html.twig', [
+      'form' => $form->createView(),
+    ]);
   }
 
   /**
-   * Update a movie.
-   */
-  #[Route('/update-movie/{id}', name: 'update_movie', methods: ['GET', 'PUT'])]
-  public function updateMovie(Request $request, int $id): Response
-  {
+  * Edit customer.
+  */
+  #[Route('/admin/edit-movie/{id}', name: 'edit-movie')]
+  public function editMovie(Request $request, $id) {
     $movie = $this->em->getRepository(Movies::class)->find($id);
-
-    if (!$movie) {
-      return new Response('Movie not found', Response::HTTP_NOT_FOUND);
-    }
-
-    $requestData = json_decode($request->getContent(), TRUE);
-    // $requestData['title'] = "update lan 2";
-    // $requestData['genre_id'] = 2;
-    if (!empty($requestData)) {
-      if (isset($requestData['title'])) {
-        $movie->setTitle($requestData['title']);
-      }
-      if (isset($requestData['genre_id'])) {
-        $genre = $this->em->getRepository(Genres::class)->find($requestData['genre_id']);
-        if (!$genre) {
-          return new Response('genre not found', Response::HTTP_NOT_FOUND);
-        }
-        $movie->setGenreId($genre);
-      }
-
+    $form = $this->createForm(MoviesFormType::class, $movie);
+    $form->handleRequest($request);
+    if ($form->isSubmitted() && $form->isValid()) {
+      $this->em->persist($movie);
       $this->em->flush();
 
-      $movieJson = $this->serializeMovie($movie);
-      return new JsonResponse($movieJson);
-    } else {
-      return new Response('Invalid movie data', Response::HTTP_BAD_REQUEST);
+      $this->addFlash('update_movie', 'true');
+      return $this->redirectToRoute('movies');
     }
+    return $this->render('movie/movie.html.twig', [
+      'form' => $form->createView(),
+    ]);
   }
-
   /**
-   * Delete a movie.
-   */
-  #[Route('/delete-movie/{id}', name: 'delete_movie', methods: ['GET', 'DELETE'])]
-  public function deleteMovie(int $id): Response
-  {
+  * Delete a movie.
+  */
+  #[Route('/admin/delete-movie/{id}', name: 'delete-movie')]
+  public function deleteMovie(Request $request, $id) {
     $movie = $this->em->getRepository(Movies::class)->find($id);
+    if ($movie) {
+      $this->em->remove($movie);
+      $this->em->flush();
 
-    if (!$movie) {
-      return new Response('Movie not found', Response::HTTP_NOT_FOUND);
+      $this->addFlash('delete_movie', 'true');
+      return $this->redirectToRoute('movies');
     }
-
-    $this->em->remove($movie);
-    $this->em->flush();
-
-    return new Response('Movie deleted successfully', Response::HTTP_OK);
+    return new Response('Invalid movie data', Response::HTTP_BAD_REQUEST);
   }
 
-  /**
-   * Serialize Movie.
-   */
-  private function serializeMovie(Movies $movie): array
-  {
-    return [
-      'id' => $movie->getId(),
-      'title' => $movie->getTitle(),
-      'genre' => [
-        'id' => $movie->getGenreId()->getId(),
-        'name' => $movie->getGenreId()->getName(),
-      ],
-    ];
-  }
 }
