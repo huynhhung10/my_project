@@ -98,5 +98,21 @@ class CustomerController extends AbstractController {
     }
     return new Response('Invalid customer data', Response::HTTP_BAD_REQUEST);
   }
-
+  /**
+   * Search for customers.
+   */
+  #[Route('/admin/search-customer', name: 'search-customer')]
+  public function searchCustomer(Request $request): Response
+  {
+    $searchQuery = $request->query->get('search_query');
+    $searchField = $request->query->get('search_field');
+    $queryBuilder = $this->em->createQueryBuilder();
+    $queryBuilder
+        ->select('c')
+        ->from('App\Entity\Customers', 'c')
+        ->where("c.$searchField LIKE :searchQuery")
+        ->setParameter('searchQuery', '%'.$searchQuery.'%');
+    $customers = $queryBuilder->getQuery()->getResult();
+    return $this->json($customers);
+  }
 }
