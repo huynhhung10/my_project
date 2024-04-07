@@ -1,0 +1,37 @@
+{% extends 'adminDashboard.html.twig' %}
+{% block body %}
+<div class="body flex-grow-1 px-3">
+    <div class="container-lg">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="mb-0">Thêm mới</h4>
+                <span class="small">Bình luận</span>
+            </div>
+            <div class="card-body">
+                {{ form_start(form, {'attr': {'class': 'row g-3', 'style': 'padding: 20px'}}) }}
+                <div class="col-md-6 mb-3">
+                    <label for="inputMovie" class="form-label">Phim</label>
+                    {{ form_row(form.movie, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="inputUser" class="form-label">Người bình luận</label>
+                    {{ form_row(form.user, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                 <div class="col-md-6 mb-3">
+                    <label for="inputReviewText" class="form-label">Bình luận</label>
+                    {{ form_row(form.review_text, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                 <div class="col-md-6 mb-3">
+                    <label for="inputRating" class="form-label">Đánh giá</label>
+                    {{ form_row(form.rating, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="col-12 mt-3 d-flex justify-content-end">
+                    {{ form_widget(form.save) }}
+                    <a href="/reviews" class="btn btn-secondary">Quay về trang chủ</a>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
