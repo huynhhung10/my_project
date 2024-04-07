@@ -1,20 +1,100 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Hello ReviewController!{% endblock %}
-
+{% extends 'adminDashboard.html.twig' %}
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+	{% if app.flashes('insert_review') is not empty %}
+		<script>
+			window.onload = function () {
+alert("Thêm bình luận thành công !");
+{% do app.session.flashBag.clear('insert_review') %}
+};
+		</script>
+	{% endif %}
+	{% if app.flashes('update_review') is not empty %}
+		<script>
+			window.onload = function () {
+alert("Cập nhật thông tin bình luận thành công !");
+{% do app.session.flashBag.clear('update_review') %}
+};
+		</script>
+	{% endif %}
+	{% if app.flashes('delete_review') is not empty %}
+		<script>
+			window.onload = function () {
+alert("Xóa bình luận thành công !");
+{% do app.session.flashBag.clear('delete_review') %}
+};
+		</script>
+	{% endif %}
+	<div class="body flex-grow-1 px-3">
+		<div class="container-lg">
+			<div class="car"></div>
+			<div class="card mb-4">
+				<div class="card-header">
+					<strong>Danh sách</strong>
+					<span class="small ms-1">bình luận</span>
+				</div>
+				<div class="card-body">
+					<a href="/admin/create-review" class="btn btn-primary active" aria-pressed="true" style="background-color: green; float:right; border: black">Thêm bình luận</a>
+					<form action="#" method="GET">
+						<div class="input-group mb-3" style="width: 450px">
+							<input type="search" name="search_query" class="form-control" placeholder="Tìm kiếm">
+							<button class="btn btn-outline-secondary" type="submit" style="background-color:#5DADE2;color:black" id="button-addon2">Search</button>
+						</div>
+					</form>
+					<div class="example">
+						<div class="tab-content rounded-bottom">
+							<div class="tab-pane p-3 active preview" role="tabpanel" id="preview-387">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Phim</th>
+											<th>Người bình luận</th>
+											<th>Bình luận</th>
+											<th>Đánh giá</th>
+											<th style="float: center; padding: 7px 35px">Thao tác</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for review in reviews %}
+											<tr>
+												<td>{{ loop.index }}</td>
+												<td>{{ review.movie.title }}</td>
+												<td>{{ review.user.username}}</td>
+												<td>{{ review.review_text}}</td>
+												<td>{{ review.rating}}</td>
+												<td>
+													<a href="/admin/edit-review/{{ review.id }}" class="btn btn-primary active" aria-pressed="true" style="background-color: #5DADE2;border: black ">sửa</a>
+													|
+													<a href="#" class="btn btn-danger btn-delete" data-id="{{ review.id }}" role="button">xóa</a>
+												</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<nav aria-label="Page navigation example" style="float:right">
+				<div></div>
+			</nav>
+		</div>
+	</div>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+const deleteButtons = document.querySelectorAll('.btn-delete');
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-       <li>Your controller at <code>/home/mtkd/Documents/leanning/5-HK2/Project/my_project/src/Controller/ReviewController.php</code></li>
-        <li>Your template at <code>/home/mtkd/Documents/leanning/5-HK2/Project/my_project/templates/review/index.html.twig</code></li>
-    </ul>
-</div>
+deleteButtons.forEach(function (button) {
+button.addEventListener('click', function (event) {
+event.preventDefault();
+const reviewId = event.target.getAttribute('data-id');
+const confirmDelete = confirm("Bạn có chắc chắn muốn xóa bình luận này?");
+if (confirmDelete) {
+window.location.href = `/admin/delete-review/${reviewId}`;
+}
+});
+});
+});
+	</script>
 {% endblock %}
