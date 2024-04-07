@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Movies;
 use App\Entity\Reviews;
+use App\Entity\Movies;
 use App\Entity\Users;
 use App\Form\ReviewFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,7 +39,7 @@ class ReviewController extends AbstractController
   /**
    * Inheric docs.
    */
-  #[Route('/reviews', name: 'reviews')]
+  #[Route('/admin/reviews', name: 'reviews')]
   public function index(): Response
   {
     $reviews = $this->em->getRepository(Reviews::class)->findAll();
@@ -104,6 +104,52 @@ class ReviewController extends AbstractController
     }
     return new Response('Invalid review data', Response::HTTP_BAD_REQUEST);
   }
-  
+  /**
+   * Search for review.
+   */
+  #[Route('/admin/search-review', name: 'search-review')]
+  public function searchReview(Request $request): Response
+  {
+    $searchQuery = $request->query->get('search_query');
+    $searchField = $request->query->get('search_field');
+    $queryBuilder = $this->em->createQueryBuilder();
+    $queryBuilder
+    ->select('r') 
+    ->from('App\Entity\Reviews', 'r')
+    ->leftJoin('r.user', 'u')
+    ->leftJoin('r.movie', 'm');
+
+if ($searchField === 'rating') {
+    $queryBuilder
+        ->andWhere("r.$searchField = :searchQuery")
+        ->setParameter('searchQuery', $searchQuery);
+} elseif ($searchField === 'username') {
+    $queryBuilder
+        ->andWhere("u.username LIKE :searchQuery")
+        ->setParameter('searchQuery', '%'.$searchQuery.'%');
+} elseif ($searchField === 'title') {
+    $queryBuilder
+        ->andWhere("m.title LIKE :searchQuery")
+        ->setParameter('searchQuery', '%'.$searchQuery.'%');
+}
+    $Reviews = $queryBuilder->getQuery()->getResult();
+    $formattedReviews = [];
+    foreach($Reviews as $review) {
+      $formattedReviews[] = [
+        'id' => $review->getId(),
+        'review_text' => $review->getReviewText(),
+        'rating' => $review->getRating(),
+        'user' => [
+            'id' => $review->getUser()->getId(),
+            'username' => $review->getUser()->getUsername()
+        ],
+        'movie' => [
+          'id' => $review->getMovie()->getId(),
+          'title' => $review->getMovie()->getTitle()
+      ]
+    ];
+    }
+    return $this->json($formattedReviews);
+  }
  
 }

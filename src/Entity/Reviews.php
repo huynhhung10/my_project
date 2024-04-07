@@ -58,7 +58,7 @@ class Reviews
     }
 
    
-    public function getReviewText(): ?int
+    public function getReviewText(): ?string
     {
         return $this->review_text;
     }

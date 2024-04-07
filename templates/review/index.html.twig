@@ -35,54 +35,117 @@ alert("Xóa bình luận thành công !");
 				<div class="card-body">
 					<a href="/admin/create-review" class="btn btn-primary active" aria-pressed="true" style="background-color: green; float:right; border: black">Thêm bình luận</a>
 					<form action="#" method="GET">
-						<div class="input-group mb-3" style="width: 450px">
-							<input type="search" name="search_query" class="form-control" placeholder="Tìm kiếm">
-							<button class="btn btn-outline-secondary" type="submit" style="background-color:#5DADE2;color:black" id="button-addon2">Search</button>
-						</div>
-					</form>
-					<div class="example">
-						<div class="tab-content rounded-bottom">
-							<div class="tab-pane p-3 active preview" role="tabpanel" id="preview-387">
-								<table class="table table-striped">
-									<thead>
-										<tr>
-											<th>#</th>
-											<th>Phim</th>
-											<th>Người bình luận</th>
-											<th>Bình luận</th>
-											<th>Đánh giá</th>
-											<th style="float: center; padding: 7px 35px">Thao tác</th>
-										</tr>
-									</thead>
-									<tbody>
-										{% for review in reviews %}
+						<div class="input-group mb-3" style="float:left; max-width: 600px; margin: auto;">
+							<div class="input-group-prepend">
+								<label class="input-group-text" for="search_field">Tìm kiếm theo:</label>
+							</div>
+							<select class="custom-select" name="search_field" id="search_field">
+								<option value="title">Phim</option>
+								<option value="username">Người bình luận</option>
+								<option value="rating">Đánh giá</option>
+							</select>
+							<input type="search" name="search_query" class="form-control" placeholder="Nhập từ khóa...">
+							<div class="input-group-append">
+								<button class="btn btn-outline-secondary" type="submit" style="background-color:#5DADE2;color:black">Tìm kiếm</button>
+							</div>
+						</form>
+						<div class="example">
+							<div class="tab-content rounded-bottom">
+								<div class="tab-pane p-3 active preview" role="tabpanel" id="preview-387">
+									<table class="table table-striped">
+										<thead>
 											<tr>
-												<td>{{ loop.index }}</td>
-												<td>{{ review.movie.title }}</td>
-												<td>{{ review.user.username}}</td>
-												<td>{{ review.review_text}}</td>
-												<td>{{ review.rating}}</td>
-												<td>
-													<a href="/admin/edit-review/{{ review.id }}" class="btn btn-primary active" aria-pressed="true" style="background-color: #5DADE2;border: black ">sửa</a>
-													|
-													<a href="#" class="btn btn-danger btn-delete" data-id="{{ review.id }}" role="button">xóa</a>
-												</td>
+												<th>#</th>
+												<th>Phim</th>
+												<th>Người bình luận</th>
+												<th>Bình luận</th>
+												<th>Đánh giá</th>
+												<th style="float: center; padding: 7px 35px">Thao tác</th>
 											</tr>
-										{% endfor %}
-									</tbody>
-								</table>
+										</thead>
+										<tbody id="review-table-body">
+											{% for review in reviews %}
+												<tr>
+													<td>{{ loop.index }}</td>
+													<td>{{ review.movie.title }}</td>
+													<td>{{ review.user.username}}</td>
+													<td>{{ review.review_text}}</td>
+													<td>{{ review.rating}}</td>
+													<td>
+														<a href="/admin/edit-review/{{ review.id }}" class="btn btn-primary active" aria-pressed="true" style="background-color: #5DADE2;border: black ">sửa</a>
+														|
+														<a href="#" class="btn btn-danger btn-delete" data-id="{{ review.id }}" role="button">xóa</a>
+													</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				<nav aria-label="Page navigation example" style="float:right">
+					<div></div>
+				</nav>
 			</div>
-			<nav aria-label="Page navigation example" style="float:right">
-				<div></div>
-			</nav>
 		</div>
-	</div>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
+		<script>
+
+			document.addEventListener("DOMContentLoaded", function () {
+const searchForm = document.querySelector('#search-form');
+searchForm.addEventListener('submit', function (event) {
+event.preventDefault();
+const submitButton = searchForm.querySelector('button[type="submit"]');
+submitButton.disabled = true;
+const reviewTableBody = document.querySelector('#review-table-body');
+reviewTableBody.innerHTML = '';
+const searchField = document.querySelector('select[name="search_field"]').value;
+const searchQuery = document.querySelector('input[name="search_query"]').value;
+fetch(`/admin/search-review?search_field=${searchField}&search_query=${
+encodeURIComponent(searchQuery)
+}`).then(response => {
+if (!response.ok) {
+throw new Error('Network response was not ok');
+}
+return response.json();
+}).then(data => {
+data.forEach((review, index) => {
+const stt = index + 1;
+const row = `
+                               <tr>
+												<td>${stt}</td>
+												<td>${
+review.movie.title
+}</td>
+												<td>${
+review.user.username
+}</td>
+												<td>${
+review.review_text
+}</td>
+												<td>${
+review.rating
+}</td>
+												<td>
+													<a href="/admin/edit-review/${
+review.id
+}" class="btn btn-primary active" aria-pressed="true" style="background-color: #5DADE2;border: black ">sửa</a>
+													|
+													<a href="#" class="btn btn-danger btn-delete" data-id="${
+review.id
+}" role="button">xóa</a>
+												</td>
+											</tr>
+                            `;
+reviewTableBody.innerHTML += row;
+});
+}).catch(error => {
+console.error('Error:', error);
+}). finally(() => {
+submitButton.disabled = false;
+});
+});
 const deleteButtons = document.querySelectorAll('.btn-delete');
 
 deleteButtons.forEach(function (button) {
@@ -96,5 +159,5 @@ window.location.href = `/admin/delete-review/${reviewId}`;
 });
 });
 });
-	</script>
-{% endblock %}
+		</script>
+	{% endblock %}
