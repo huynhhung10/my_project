@@ -24,6 +24,14 @@
             };
         </script>
     {% endif %}
+        {% if app.flashes('error') is not empty %}
+        <script>
+            window.onload = function() {
+                alert('Không thể xóa thể loại vì đang được sử dụng bởi một số bộ phim.');
+                {% do app.session.flashBag.clear('error') %}
+            };
+        </script>
+    {% endif %}
     <div class="body flex-grow-1 px-3">
         <div class="container-lg">
             <div class="card mb-4">

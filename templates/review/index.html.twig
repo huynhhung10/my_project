@@ -33,22 +33,24 @@ alert("Xóa bình luận thành công !");
 					<span class="small ms-1">bình luận</span>
 				</div>
 				<div class="card-body">
-					<a href="/admin/create-review" class="btn btn-primary active" aria-pressed="true" style="background-color: green; float:right; border: black">Thêm bình luận</a>
-					<form action="#" method="GET">
-						<div class="input-group mb-3" style="float:left; max-width: 600px; margin: auto;">
-							<div class="input-group-prepend">
-								<label class="input-group-text" for="search_field">Tìm kiếm theo:</label>
-							</div>
-							<select class="custom-select" name="search_field" id="search_field">
-								<option value="title">Phim</option>
+					<a href="/admin/create-review" class="btn btn-primary active" aria-pressed="true" style="background-color: green; float:right; border: black">Thêm phim</a>
+                    <form id="search-form" action="#" method="GET">
+                        <div class="input-group mb-3" style="float:left; max-width: 600px; margin: auto;">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="search_field">Tìm kiếm theo:</label>
+                            </div>
+                            <select class="custom-select" name="search_field" id="search_field">
+                                <option value="title">Phim</option>
 								<option value="username">Người bình luận</option>
 								<option value="rating">Đánh giá</option>
-							</select>
-							<input type="search" name="search_query" class="form-control" placeholder="Nhập từ khóa...">
-							<div class="input-group-append">
-								<button class="btn btn-outline-secondary" type="submit" style="background-color:#5DADE2;color:black">Tìm kiếm</button>
-							</div>
-						</form>
+                            </select>
+                            <input type="search" name="search_query" class="form-control" placeholder="Nhập từ khóa...">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="submit" style="background-color:#5DADE2;color:black">Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </form>
+					
 						<div class="example">
 							<div class="tab-content rounded-bottom">
 								<div class="tab-pane p-3 active preview" role="tabpanel" id="preview-387">
@@ -68,13 +70,13 @@ alert("Xóa bình luận thành công !");
 												<tr>
 													<td>{{ loop.index }}</td>
 													<td>{{ review.movie.title }}</td>
-													<td>{{ review.user.username}}</td>
-													<td>{{ review.review_text}}</td>
+													<td>{{ review.customer.username}}</td>
+													<td>{{ review.reviewtext}}</td>
 													<td>{{ review.rating}}</td>
 													<td>
 														<a href="/admin/edit-review/{{ review.id }}" class="btn btn-primary active" aria-pressed="true" style="background-color: #5DADE2;border: black ">sửa</a>
 														|
-														<a href="#" class="btn btn-danger btn-delete" data-id="{{ review.id }}" role="button">xóa</a>
+														<a href="/admin/delete-review/{{ review.id }}" class="btn btn-danger btn-delete" data-id="{{ review.id }}" role="button">xóa</a>
 													</td>
 												</tr>
 											{% endfor %}
@@ -86,11 +88,12 @@ alert("Xóa bình luận thành công !");
 					</div>
 				</div>
 				<nav aria-label="Page navigation example" style="float:right">
-					<div></div>
-				</nav>
-			</div>
-		</div>
-		<script>
+					  <div>
+            </div>
+        </nav>
+        </div>
+    </div>
+    <script>
 
 			document.addEventListener("DOMContentLoaded", function () {
 const searchForm = document.querySelector('#search-form');
@@ -119,10 +122,10 @@ const row = `
 review.movie.title
 }</td>
 												<td>${
-review.user.username
+review.customer.username
 }</td>
 												<td>${
-review.review_text
+review.reviewtext
 }</td>
 												<td>${
 review.rating

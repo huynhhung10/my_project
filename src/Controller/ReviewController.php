@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Reviews;
 use App\Entity\Movies;
-use App\Entity\Users;
+use App\Entity\customers;
 use App\Form\ReviewFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,7 +55,7 @@ class ReviewController extends AbstractController
   public function createReview(Request $request)
   {
     $review = new Reviews();
-    $form = $this->createForm(ReviewFormType::class, $review);
+    $form = $this->createForm(ReviewFormType::class, $review); 
     $form->handleRequest($request);
     if ($form->isSubmitted() && $form->isValid()) {
       $this->em->persist($review);
@@ -116,14 +116,14 @@ class ReviewController extends AbstractController
     $queryBuilder
     ->select('r') 
     ->from('App\Entity\Reviews', 'r')
-    ->leftJoin('r.user', 'u')
+    ->leftJoin('r.customer', 'u')
     ->leftJoin('r.movie', 'm');
 
 if ($searchField === 'rating') {
     $queryBuilder
         ->andWhere("r.$searchField = :searchQuery")
         ->setParameter('searchQuery', $searchQuery);
-} elseif ($searchField === 'username') {
+} elseif ($searchField === 'customername') {
     $queryBuilder
         ->andWhere("u.username LIKE :searchQuery")
         ->setParameter('searchQuery', '%'.$searchQuery.'%');
@@ -137,11 +137,11 @@ if ($searchField === 'rating') {
     foreach($Reviews as $review) {
       $formattedReviews[] = [
         'id' => $review->getId(),
-        'review_text' => $review->getReviewText(),
+        'reviewtext' => $review->getReviewText(),
         'rating' => $review->getRating(),
-        'user' => [
-            'id' => $review->getUser()->getId(),
-            'username' => $review->getUser()->getUsername()
+        'customer' => [
+            'id' => $review->getCustomer()->getId(),
+            'username' => $review->getCustomer()->getUsername()
         ],
         'movie' => [
           'id' => $review->getMovie()->getId(),
