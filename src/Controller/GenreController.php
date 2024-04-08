@@ -109,6 +109,20 @@ class GenreController extends AbstractController
     if (!$genre) {
       return new Response('Genre not found', Response::HTTP_NOT_FOUND);
     }
+    $movies = $genre->getMovies();
+        if (count($movies) > 0) {
+            $movieNames = [];
+            foreach ($movies as $movie) {
+                $movieNames[] = $movie->getTitle();
+            }
+            $errorMsg = sprintf(
+                'Không thể xóa thể loại này vì nó đang liên kết với các bộ phim sau: %s',
+                implode(', ', $movieNames)
+            );
+            $this->addFlash('error', $errorMsg);
+            return $this->redirectToRoute('genres');
+        }
+
     $this->em->remove($genre);
     $this->em->flush();
     $this->addFlash('delete_genre', 'true');
