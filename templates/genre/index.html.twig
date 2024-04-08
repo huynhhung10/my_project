@@ -1,0 +1,142 @@
+{% extends 'adminDashboard.html.twig' %}
+{% block body %}
+    {% if app.flashes('insert_genre') is not empty %}
+        <script>
+            window.onload = function() {
+                alert("Thêm thể loại thành công !");
+                {% do app.session.flashBag.clear('insert_genres') %}
+            };
+        </script>
+    {% endif %}
+    {% if app.flashes('update_genre') is not empty %}
+        <script>
+            window.onload = function() {
+                alert("Cập nhật thông tin thể loại thành công !");
+                {% do app.session.flashBag.clear('update_genre') %}
+            };
+        </script>
+    {% endif %}
+    {% if app.flashes('delete_genre') is not empty %}
+        <script>
+            window.onload = function() {
+                alert("Xóa thể loại thành công !");
+                {% do app.session.flashBag.clear('delete_genre') %}
+            };
+        </script>
+    {% endif %}
+    <div class="body flex-grow-1 px-3">
+        <div class="container-lg">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <strong>Danh sách</strong><span class="small ms-1">thể loại</span>
+                </div>
+                <div class="card-body">
+                    <a href="/admin/create-genre" class="btn btn-primary active" aria-pressed="true" style="background-color: green; float:right; border: black">Thêm thể loại</a>
+                    <form id="search-form" action="#" method="GET">
+                        <div class="input-group mb-3" style="float:left; max-width: 600px; margin: auto;">
+                            <input type="search" name="search_query" class="form-control" placeholder="Nhập từ khóa...">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="submit" style="background-color:#5DADE2;color:black">Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="example">
+                        <div class="tab-content rounded-bottom">
+                            <div class="tab-pane p-3 active preview" role="tabpanel" id="preview-387">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Genrename</th>
+                                            <th style="float: center; padding: 7px 35px">Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="genre-table-body">
+                                        {% for genre in genres %}
+                                        <tr>
+                                            <td>{{ loop.index }}</td>
+                                            
+                                            <td>{{ genre.name }}</td>
+                
+                                            <td>
+                                                <a href="/admin/edit-genre/{{ genre.id }}" class="btn btn-primary active"  aria-pressed="true" style="background-color: #5DADE2;border: black ">sửa</a>
+                                                |
+                                                <a href="#" class="btn btn-danger btn-delete" data-id="{{ genre.id }}" role="button">xóa</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav aria-label="Page navigation example" style="float:right">
+                <div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const searchForm = document.querySelector('#search-form');
+
+            searchForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const submitButton = searchForm.querySelector('button[type="submit"]');
+                submitButton.disabled = true;
+                const genreTableBody = document.querySelector('#genre-table-body');
+                genreTableBody.innerHTML = '';
+                
+                const searchQuery = document.querySelector('input[name="search_query"]').value;
+                fetch(`/admin/search-genre?search_query=${encodeURIComponent(searchQuery)}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        data.forEach((genre, index) => {
+                            const stt = index + 1;
+                            const row = `
+                                <tr>
+                                    <td>${stt}</td>
+
+                                    <td>${genre.name}</td>
+                                    
+                                    <td>
+                                        <a href="/admin/edit-genre/${genre.id}" class="btn btn-primary active" style="background-color: #5DADE2; border: black">sửa</a>
+                                        |
+                                        <a href="#" class="btn btn-danger btn-delete" data-id="${genre.id}" role="button">xóa</a>
+                                    </td>
+                                </tr>
+                            `;
+                            genreTableBody.innerHTML += row;
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    })
+                    .finally(() => {
+                        submitButton.disabled = false;
+                    });
+            });
+            const deleteButtons = document.querySelectorAll('.btn-delete');
+
+            deleteButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const genreId = event.target.getAttribute('data-id');
+                    const confirmDelete = confirm("Bạn có chắc chắn muốn xóa thể loại này?");
+                    if (confirmDelete) {
+                        window.location.href = `/admin/delete-genre/${genreId}`;
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
