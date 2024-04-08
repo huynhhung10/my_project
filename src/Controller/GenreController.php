@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Controller;
-use App\Entity\Movies;
 use App\Entity\Genres;
 use App\Form\GenresFormType;
 use Doctrine\ORM\EntityManagerInterface;
