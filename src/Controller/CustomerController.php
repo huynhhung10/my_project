@@ -13,7 +13,8 @@ use Symfony\Component\Routing\Attribute\Route;
 /**
  * Customer Controller.
  */
-class CustomerController extends AbstractController {
+class CustomerController extends AbstractController
+{
   /**
    * Entity manager.
    *
@@ -27,15 +28,17 @@ class CustomerController extends AbstractController {
    * @param \Doctrine\ORM\EntityManagerInterface $em
    *   The entity manager instance to manage database interactions.
    */
-  public function __construct(EntityManagerInterface $em) {
+  public function __construct(EntityManagerInterface $em)
+  {
     $this->em = $em;
   }
 
   /**
-  * Show customers.
-  */
-  #[Route('admin/customers', name: 'customers')]
-  public function index(): Response {
+   * Show customers.
+   */
+  #[Route('/admin/customers', name: 'customers')]
+  public function index(): Response
+  {
     $customers = $this->em->getRepository(Customers::class)->findAll();
     return $this->render('customer/index.html.twig', [
       'customers' => $customers,
@@ -43,10 +46,11 @@ class CustomerController extends AbstractController {
   }
 
   /**
-  * Create customer.
-  */
+   * Create customer.
+   */
   #[Route('/admin/create-customer', name: 'create-customer')]
-  public function createCustomer(Request $request) {
+  public function createCustomer(Request $request)
+  {
     $customer = new Customers();
     $form = $this->createForm(CustomersFormType::class, $customer);
     $form->handleRequest($request);
@@ -63,10 +67,11 @@ class CustomerController extends AbstractController {
   }
 
   /**
-  * Edit customer.
-  */
+   * Edit customer.
+   */
   #[Route('/admin/edit-customer/{id}', name: 'edit-customer')]
-  public function editCustomer(Request $request, $id) {
+  public function editCustomer(Request $request, $id)
+  {
 
     $customer = $this->em->getRepository(Customers::class)->find($id);
     $form = $this->createForm(CustomersFormType::class, $customer);
@@ -84,10 +89,11 @@ class CustomerController extends AbstractController {
   }
 
   /**
-  * Delete a customer.
-  */
+   * Delete a customer.
+   */
   #[Route('/admin/delete-customer/{id}', name: 'delete-customer')]
-  public function deleteCustomer(Request $request, $id) {
+  public function deleteCustomer(Request $request, $id)
+  {
     $customer = $this->em->getRepository(Customers::class)->find($id);
     if ($customer) {
       $this->em->remove($customer);
@@ -108,10 +114,10 @@ class CustomerController extends AbstractController {
     $searchField = $request->query->get('search_field');
     $queryBuilder = $this->em->createQueryBuilder();
     $queryBuilder
-        ->select('c')
-        ->from('App\Entity\Customers', 'c')
-        ->where("c.$searchField LIKE :searchQuery")
-        ->setParameter('searchQuery', '%'.$searchQuery.'%');
+      ->select('c')
+      ->from('App\Entity\Customers', 'c')
+      ->where("c.$searchField LIKE :searchQuery")
+      ->setParameter('searchQuery', '%' . $searchQuery . '%');
     $customers = $queryBuilder->getQuery()->getResult();
     return $this->json($customers);
   }
