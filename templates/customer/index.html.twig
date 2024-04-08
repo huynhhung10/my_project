@@ -32,12 +32,23 @@
                 </div>
                 <div class="card-body">
                     <a href="/admin/create-customer" class="btn btn-primary active" aria-pressed="true" style="background-color: green; float:right; border: black">Thêm khách hàng</a>
-                    <form action="#" method="GET">
-                        <div class="input-group mb-3" style="width: 450px">
-                            <input type="search" name="search_query" class="form-control" placeholder="Tìm kiếm">
-                            <button class="btn btn-outline-secondary" type="submit" style="background-color:#5DADE2;color:black" id="button-addon2">Search</button>
+                    <form id="search-form" action="#" method="GET">
+                        <div class="input-group mb-3" style="float:left; max-width: 600px; margin: auto;">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="search_field">Tìm kiếm theo:</label>
+                            </div>
+                            <select class="custom-select" name="search_field" id="search_field">
+                                <option value="username">Username</option>
+                                <option value="email">Email</option>
+                                <option value="phonenumber">Số điện thoại</option>
+                            </select>
+                            <input type="search" name="search_query" class="form-control" placeholder="Nhập từ khóa...">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="submit" style="background-color:#5DADE2;color:black">Tìm kiếm</button>
+                            </div>
                         </div>
                     </form>
+
                     <div class="example">
                         <div class="tab-content rounded-bottom">
                             <div class="tab-pane p-3 active preview" role="tabpanel" id="preview-387">
@@ -53,7 +64,7 @@
                                             <th style="float: center; padding: 7px 35px">Thao tác</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="customer-table-body">
                                         {% for customer in customers %}
                                         <tr>
                                             <td>{{ loop.index }}</td>
@@ -89,6 +100,53 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            const searchForm = document.querySelector('#search-form');
+
+            searchForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const submitButton = searchForm.querySelector('button[type="submit"]');
+                submitButton.disabled = true;
+                const customerTableBody = document.querySelector('#customer-table-body');
+                customerTableBody.innerHTML = '';
+                const searchField = document.querySelector('select[name="search_field"]').value;
+                const searchQuery = document.querySelector('input[name="search_query"]').value;
+                fetch(`/admin/search-customer?search_field=${searchField}&search_query=${encodeURIComponent(searchQuery)}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        data.forEach((customer, index) => {
+                            const stt = index + 1;
+                            const row = `
+                                <tr>
+                                    <td>${stt}</td>
+                                    <td>
+                                        <img src="${customer.img}" alt="Avatar" style="width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
+                                    </td>
+                                    <td>${customer.username}</td>
+                                    <td>${customer.email}</td>
+                                    <td>${customer.phonenumber}</td>
+                                    <td>${customer.status ? 'Đang hoạt động' : 'Không hoạt động'}</td>
+                                    <td>
+                                        <a href="/admin/edit-customer/${customer.id}" class="btn btn-primary active" style="background-color: #5DADE2; border: black">sửa</a>
+                                        |
+                                        <a href="#" class="btn btn-danger btn-delete" data-id="${customer.id}" role="button">xóa</a>
+                                    </td>
+                                </tr>
+                            `;
+                            customerTableBody.innerHTML += row;
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    })
+                    .finally(() => {
+                        submitButton.disabled = false;
+                    });
+            });
             const deleteButtons = document.querySelectorAll('.btn-delete');
 
             deleteButtons.forEach(function(button) {

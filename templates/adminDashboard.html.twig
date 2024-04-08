@@ -15,8 +15,8 @@
 
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
     <title>CoreUI Free Bootstrap Admin Template</title>
-   
-   
+
+
     {% block stylesheets %}
     <link rel="apple-touch-icon" sizes="57x57" href="{{asset('backend/assets/favicon/apple-icon-57x57.png')}}">
     <link rel="apple-touch-icon" sizes="60x60" href="{{asset('backend/assets/favicon/apple-icon-60x60.png')}}">
@@ -47,10 +47,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="{{asset('backend/assets/favicon/manifest.json')}}">
     <!-- Vendors styles-->
-  
+
     <link rel="stylesheet" href="{{asset('backend/vendors/simplebar/css/simplebar.css')}}">
     <link rel="stylesheet" href="{{asset('backend/css/vendors/simplebar.css')}}">
-   
+
 
     <!-- Main styles for this application-->
     <link href="{{asset('backend/css/style.css')}}" rel="stylesheet">
@@ -62,9 +62,9 @@
     <link href= "{{asset('backend/css/toastr.css')}}" rel="stylesheet">
 
     {% endblock %}
-   
-   
-    
+
+
+
     {% block javascripts %}
     <script src="{{asset('backend/js/toastr.min.js')}}"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -91,7 +91,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="{{asset('frontend/js/Validator.js')}}"></script>
-        
+
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <script src="{{asset('frontend/js/bootstrap.min.js')}}"></script>
     <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
@@ -99,23 +99,205 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-   
+
     {% endblock %}
-   
-   
+
+
   </head>
 
 
-  
+
   <body>
+<!-- thuong hieu -->
+<div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+	<div class="sidebar-brand d-none d-md-flex">
+		<svg class="sidebar-brand-full" width="118" height="46" alt="CoreUI Logo">
+			<use xlink:href="{{asset('backend/assets/brand/coreui.svg#full')}}"></use>
+		</svg>
+		<svg class="sidebar-brand-narrow" width="46" height="46" alt="CoreUI Logo">
+			<use xlink:href="{{asset('backend/assets/brand/coreui.svg#signet')}}"></use>
+		</svg>
+	</div>
+
+
+	<!-- Thanh menu bên trái -->
+	<ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
+		<li class="nav-item">
+			<a class="nav-link" href="admin/viewdashboard">
+				<svg class="nav-icon">
+					<use xlink:href="{{asset('backend/vendors/@coreui/icons/svg/free.svg#cil-speedometer')}}"></use>
+				</svg>
+				Dashboard</a>
+		</li>
+
+		<li class="nav-title">Components</li>
+
+		<!-- Quản lý sản phẩm -->
+		<li class="nav-group">
+			<a class="nav-link nav-group-toggle" href="movies">
+				<svg class="nav-icon">
+					<use xlink:href="{{asset('backend/vendors/@coreui/icons/svg/free.svg#cil-book')}}"></use>
+				</svg>
+				Quản lý sản phẩm</a>
+			<ul class="nav-group-items">
+
+				<li class="nav-item">
+					<a class="nav-link" href="movies">
+						<span class="nav-icon"></span>Danh sách sản phẩm</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="create-movie">
+						<span class="nav-icon"></span>Thêm sản phẩm</a>
+				</li>
+
+			</ul>
+		</li>
+
+		<!-- Quản lý thể loại-->
+		<li class="nav-group">
+			<a class="nav-link nav-group-toggle" href="genres">
+				<svg class="nav-icon">
+					<use xlink:href="{{asset('backend/vendors/@coreui/icons/svg/free.svg#cil-tags')}}"></use>
+				</svg>Quản lý thể loại</a>
+			<ul class="nav-group-items">
+
+				<li class="nav-item">
+					<a class="nav-link" href="genres">
+						<span class="nav-icon"></span>Danh sách thể loại</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="genres">
+						<span class="nav-icon"></span>Thêm thể loại</a>
+				</li>
+
+			</ul>
+		</li>
+
+		<!-- Quản lý bình luận -->
+		<li class="nav-group">
+			<a class="nav-link nav-group-toggle" href="reviews">
+				<svg class="nav-icon">
+					<use xlink:href="{{asset('backend/vendors/@coreui/icons/svg/free.svg#cil-cursor')}}"></use>
+				</svg>Quản lý bình luận</a>
+			<ul class="nav-group-items">
+
+				<li class="nav-item">
+					<a class="nav-link" href="reviews">
+						<span class="nav-icon"></span>Danh sách bình luận</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="create-review">
+						<span class="nav-icon"></span>Thêm bình luận</a>
+				</li>
+
+			</ul>
+		</li>
+
+
+		<!--Quản lý khách hàng -->
+		<li class="nav-group">
+			<a class="nav-link nav-group-toggle" href="customers">
+				<svg class="nav-icon">
+					<use xlink:href="{{asset('backend/vendors/@coreui/icons/svg/free.svg#cil-user')}}"></use>
+				</svg>Quản lý khách hàng</a>
+			<ul class="nav-group-items">
+
+				<li class="nav-item">
+					<a class="nav-link" href="customers">
+						<span class="nav-icon"></span>Danh sách khách hàng</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="create-customer">
+						<span class="nav-icon"></span>thêm khách hàng</a>
+				</li>
+
+
+			</ul>
+		</li>
+
+
+		<!-- Quản lý đơn hàng -->
+		<li class="nav-group">
+			<a class="nav-link nav-group-toggle" href="admin/addlist">
+				<svg class="nav-icon">
+					<use xlink:href="{{asset('backend/vendors/@coreui/icons/svg/free.svg#cil-cart')}}"></use>
+				</svg>Quản lý admin</a>
+			<ul class="nav-group-items">
+				<li class="nav-item">
+					<a class="nav-link" href="admin/addlist">
+						<span class="nav-icon"></span>Danh sách</a>
+				</li>
+			</ul>
+		</li>
+
+
+	</div>
+
+
+	<!-- Content bên phải -->
+	<div
+		class="wrapper d-flex flex-column min-vh-100 bg-light">
+		<!-- header -->
+		<header class="header header-sticky mb-4">
+
+			<div class="container-fluid">
+
+				<button class="header-toggler px-md-0 me-md-3" type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()"></button>
+				<a
+					class="header-brand d-md-none" href="#">
+
+
+					<!-- drop down user menu -->
+					<ul class="header-nav ms-3">
+						<li class="nav-item dropdown">
+							<a class="nav-link py-0" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+								<div class="avatar avatar-md"><img class="avatar-img" src="{{asset('backend/assets/img/avatars/8.jpg')}} " alt="user@email.com"></div>
+							</a>
+							<div class="dropdown-menu dropdown-menu-end pt-0">
+								<div class="dropdown-header bg-light py-2">
+									<div class="fw-semibold">
+										{% if app.user %}
+
+											{{ app.user.userIdentifier }}
+
+										{% endif %}
+									</div>
+								</div>
+
+
+								<a class="dropdown-item" href="/{{app.user ? 'logout' : 'login'}}">
+
+									<svg class="icon me-2">
+										<use xlink:href="{{('backend/vendors/@coreui/icons/svg/free.svg#cil-account-logout')}}"></use>
+									</svg>
+									{{ app.user ? 'Logout' : 'Login' }}
+								</a>
+
+							</div>
+						</li>
+					</ul>
+				</div>
+
+
+				<div class="header-divider"></div>
+				<div class="container-fluid">
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb my-0 ms-2"></ol>
+					</nav>
+				</div>
+			</header>
+
+
+			<!-- Body content -->
+
     {% block body %}
-    
 
 
 
-  
+
+
     {% endblock %}
-    
+
   </body>
 
 </html>

@@ -98,5 +98,41 @@ class MovieController extends AbstractController{
     }
     return new Response('Invalid movie data', Response::HTTP_BAD_REQUEST);
   }
+  /**
+   * Search for movies.
+   */
+  #[Route('/admin/search-movie', name: 'search-movie')]
+  public function searchMovie(Request $request): Response
+  {
+    $searchQuery = $request->query->get('search_query');
+    $searchField = $request->query->get('search_field');
+    $queryBuilder = $this->em->createQueryBuilder();
+    $queryBuilder
+        ->select('m', 'g') 
+        ->from('App\Entity\Movies', 'm')
+        ->leftJoin('m.Genre', 'g');
 
+    if ($searchField === 'name') {
+        $queryBuilder
+            ->where("g.$searchField LIKE :searchQuery")
+            ->setParameter('searchQuery', '%'.$searchQuery.'%');
+    } elseif ($searchField === 'name') {
+        $queryBuilder
+            ->where("m.$searchField LIKE :searchQuery")
+            ->setParameter('searchQuery', '%'.$searchQuery.'%');
+    }
+    $movies = $queryBuilder->getQuery()->getResult();
+    $formattedMovies = [];
+    foreach($movies as $movie) {
+      $formattedMovies[] = [
+        'id' => $movie->getId(),
+        'title' => $movie->getTitle(),
+        'genre' => [
+            'id' => $movie->getGenre()->getId(),
+            'name' => $movie->getGenre()->getName()
+        ]
+    ];
+    }
+    return $this->json($formattedMovies);
+  }
 }

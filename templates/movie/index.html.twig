@@ -32,12 +32,21 @@
             <div class="card-header"><strong>Danh sách</strong><span class="small ms-1">Khách hàng</span></div>
             <div class="card-body">
             <a href="/admin/create-movie" class="btn btn-primary active" aria-pressed="true" style="background-color: green; float:right; border: black">Thêm phim</a>
-            <form action="#" method="GET">
-            <div class="input-group mb-3" style="width: 450px">
-              <input type="search" name="search_query" class="form-control" placeholder="Tìm kiếm" >
-              <button class="btn btn-outline-secondary" type = "submit" style="background-color:#5DADE2;color:black" id="button-addon2">Search</button>
-            </div>
-            </form>
+                    <form id="search-form" action="#" method="GET">
+                        <div class="input-group mb-3" style="float:left; max-width: 600px; margin: auto;">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="search_field">Tìm kiếm theo:</label>
+                            </div>
+                            <select class="custom-select" name="search_field" id="search_field">
+                                <option value="title">Tiêu đề</option>
+                                <option value="name">Thể loại</option>
+                            </select>
+                            <input type="search" name="search_query" class="form-control" placeholder="Nhập từ khóa...">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="submit" style="background-color:#5DADE2;color:black">Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </form>
               <div class="example">
                 <div class="tab-content rounded-bottom">
                   <div class="tab-pane p-3 active preview" role="tabpanel" id="preview-387">
@@ -50,7 +59,7 @@
                           <th style="float: center; padding: 7px 35px">Thao tác</th>
                         </tr>
                       </thead>
-                      <tbody >
+                      <tbody id="movie-table-body">
                         {% for movie in movies %}
                         <tr>
                           <td>{{ loop.index }}</td>
@@ -78,6 +87,47 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+          const searchForm = document.querySelector('#search-form');
+            searchForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const submitButton = searchForm.querySelector('button[type="submit"]');
+                submitButton.disabled = true;
+                const movieTableBody = document.querySelector('#movie-table-body');
+                movieTableBody.innerHTML = '';
+                const searchField = document.querySelector('select[name="search_field"]').value;
+                const searchQuery = document.querySelector('input[name="search_query"]').value;
+                fetch(`/admin/search-movie?search_field=${searchField}&search_query=${encodeURIComponent(searchQuery)}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        data.forEach((movie, index) => {
+                            const stt = index + 1;
+                            const row = `
+                                <tr>
+                                    <td>${stt}</td>
+                                    <td>${movie.title}</td>
+                                    <td>${movie.genre.name}</td>
+                                    <td>
+                                        <a href="/admin/edit-movie/${movie.id}" class="btn btn-primary active" style="background-color: #5DADE2; border: black">sửa</a>
+                                        |
+                                        <a href="#" class="btn btn-danger btn-delete" data-id="${movie.id}" role="button">xóa</a>
+                                    </td>
+                                </tr>
+                            `;
+                            movieTableBody.innerHTML += row;
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    })
+                    .finally(() => {
+                        submitButton.disabled = false;
+                    });
+            });
             const deleteButtons = document.querySelectorAll('.btn-delete');
 
             deleteButtons.forEach(function(button) {
