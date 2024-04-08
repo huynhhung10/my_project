@@ -25,14 +25,14 @@
     <li class="nav-title">Components</li>
 
     <!-- Quản lý sản phẩm -->
-    <li class="nav-group"><a class="nav-link nav-group-toggle" href="admin/allmovie">
+    <li class="nav-group"><a class="nav-link nav-group-toggle" href="admin/movies">
         <svg class="nav-icon">
           <use xlink:href="{{asset('backend/vendors/@coreui/icons/svg/free.svg#cil-book')}}"></use>
         </svg> Quản lý sản phẩm</a>
       <ul class="nav-group-items">
         {% if app.user %}
-          <li class="nav-item"><a class="nav-link" href="admin/allmovie"><span class="nav-icon"></span>Danh sách sản phẩm</a></li>
-        <li class="nav-item"><a class="nav-link" href="admin/addmovie"><span class="nav-icon"></span>Thêm sản phẩm</a></li>
+          <li class="nav-item"><a class="nav-link" href="admin/movies"><span class="nav-icon"></span>Danh sách sản phẩm</a></li>
+        <li class="nav-item"><a class="nav-link" href="admin/create-movie"><span class="nav-icon"></span>Thêm sản phẩm</a></li>
         {% endif %}
       
         
@@ -40,14 +40,14 @@
     </li>
 
     <!-- Quản lý thể loại-->
-    <li class="nav-group"><a class="nav-link nav-group-toggle" href="admin/allgenres">
+    <li class="nav-group"><a class="nav-link nav-group-toggle" href="admin/genres">
         <svg class="nav-icon">
           <use xlink:href="{{asset('backend/vendors/@coreui/icons/svg/free.svg#cil-tags')}}"></use>
         </svg>Quản lý thể loại</a>
       <ul class="nav-group-items">
         {% if app.user %}
-        <li class="nav-item"><a class="nav-link" href="admin/allgenres"><span class="nav-icon"></span>Danh sách thể loại</a></li>
-        <li class="nav-item"><a class="nav-link" href="admin/addgenres"><span class="nav-icon"></span>Thêm thể loại</a></li>
+        <li class="nav-item"><a class="nav-link" href="admin/genres"><span class="nav-icon"></span>Danh sách thể loại</a></li>
+        <li class="nav-item"><a class="nav-link" href="admin/create-genres"><span class="nav-icon"></span>Thêm thể loại</a></li>
         {% endif %}
       
         
@@ -55,7 +55,7 @@
     </li>
 
     <!-- Quản lý bình luận -->
-    <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
+    <li class="nav-group"><a class="nav-link nav-group-toggle" href="admin/reviews">
         <svg class="nav-icon">
           <use xlink:href="{{asset('backend/vendors/@coreui/icons/svg/free.svg#cil-cursor')}}"></use>
         </svg>Quản lý bình luận</a>
