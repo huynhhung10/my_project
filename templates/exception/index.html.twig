@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Không Tìm Thấy</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 30px;
+            color: #dc3545;
+        }
+        p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .error-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <img src="{{ asset('images/404.png') }}" alt="Lỗi 404" class="error-img">
+                <p class="lead">Trang bạn đang tìm kiếm không tồn tại.</p>
+                <p>Bạn sẽ được chuyển hướng về trang chủ sau <span id="countdown">10</span> giây.</p>
+                <p><a href="{{ path('app_admin') }}" style="background-color: #3c4b64; border-color:#3c4b64;" class="btn btn-primary">Quay lại Trang Chủ Ngay</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(function() {
+            window.location.href = "{{ path('app_admin') }}";
+        }, 10000);
+        var countdown = 10;
+        var countdownElement = document.getElementById('countdown');
+        setInterval(function() {
+            countdown--;
+            countdownElement.textContent = countdown;
+        }, 1000);
+    </script>
+</body>
+</html>

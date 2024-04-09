@@ -24,6 +24,15 @@
             };
         </script>
     {% endif %}
+    {% if app.session.getFlashBag().has('error') %}
+        <script>
+            window.onload = function() {
+                alert("{{ app.session.getFlashBag().get('error')|first }}");
+                {% do app.session.flashBag.clear('error') %}
+            };
+        </script>
+    {% endif %}
+
     <div class="body flex-grow-1 px-3">
         <div class="container-lg">
             <div class="card mb-4">
