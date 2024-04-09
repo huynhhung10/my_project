@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\Genres;
 use App\Form\GenresFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -97,31 +98,36 @@ class GenreController extends AbstractController
     ]);
   }
 
-/**
- * Delete a genre.
- */
-#[Route('/admin/delete-genre/{id}', name: 'delete_genre')]
-public function deleteGenre(Request $request,int $id): Response
-{
+  /**
+   * Delete a genre.
+   */
+  #[Route('/admin/delete-genre/{id}', name: 'delete_genre')]
+  public function deleteGenre(int $id): Response
+  {
     $genre = $this->em->getRepository(Genres::class)->find($id);
 
     if (!$genre) {
-        return new Response('Genre not found', Response::HTTP_NOT_FOUND);
+      return new Response('Genre not found', Response::HTTP_NOT_FOUND);
     }
+    $movies = $genre->getMovies();
+        if (count($movies) > 0) {
+            $movieNames = [];
+            foreach ($movies as $movie) {
+                $movieNames[] = $movie->getTitle();
+            }
+            $errorMsg = sprintf(
+                'Không thể xóa thể loại này vì nó đang liên kết với các bộ phim sau: %s',
+                implode(', ', $movieNames)
+            );
+            $this->addFlash('error', $errorMsg);
+            return $this->redirectToRoute('genres');
+        }
 
-    $moviesUsingGenre = $this->em->getRepository(Movies::class)->findBy(['Genre' => $genre]);
-
-    if (!empty($moviesUsingGenre)) {
-      
-      $this->addFlash('error', 'Không thể xóa thể loại vì đang được sử dụng bởi một số bộ phim.');
-        return $this->redirectToRoute('genres'); 
-    }
     $this->em->remove($genre);
     $this->em->flush();
     $this->addFlash('delete_genre', 'true');
     return $this->redirectToRoute('genres'); 
-}
-
+  }
   /**
    * Search for genre.
    */
