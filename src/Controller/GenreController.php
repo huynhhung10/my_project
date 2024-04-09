@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * Genre class.
@@ -34,26 +35,31 @@ class GenreController extends AbstractController
   {
     $this->em = $entityManager;
   }
-  
+
   /**
    * Show all genres.
    */
   #[Route('/admin/genres', name: 'genres')]
-  public function indexGenre(): Response
+  public function indexGenre(Request $request, PaginatorInterface $paginator): Response
   {
-      $genres = $this->em->getRepository(Genres::class)->findAll();
-      return $this->render('genre/index.html.twig', [
-        
-        'genres' => $genres
-      ]);
+    $genres = $this->em->getRepository(Genres::class)->findAll();
+    $pagination = $paginator->paginate(
+      $genres,
+      $request->query->getInt('page', 1),
+      $request->query->getInt('limit', 5)
+    );
+    return $this->render('genre/index.html.twig', [
+
+      'genres' => $pagination
+    ]);
   }
-    /**
+  /**
    * Create a new genre.
    */
   #[Route('/admin/create-genre', name: 'create-genre')]
   public function createGenre(Request $request)
   {
-    $genre= new Genres();
+    $genre = new Genres();
     $form = $this->createForm(GenresFormType::class, $genre);
     // $form->handleRequest($request);
 
@@ -68,7 +74,7 @@ class GenreController extends AbstractController
 
     return $this->render('genre/genre.html.twig', [
       'form' => $form->createView(),
-      
+
     ]);
   }
 
@@ -78,7 +84,7 @@ class GenreController extends AbstractController
   #[Route('/admin/edit-genre/{id}', name: 'edit-genre')]
   public function editGenre(Request $request, int $id): Response
   {
-    
+
     $genre = $this->em->getRepository(Genres::class)->find($id);
 
     if (!$genre) {
@@ -112,7 +118,7 @@ class GenreController extends AbstractController
     $this->em->remove($genre);
     $this->em->flush();
     $this->addFlash('delete_genre', 'true');
-    return $this->redirectToRoute('genres'); 
+    return $this->redirectToRoute('genres');
   }
   /**
    * Search for genre.
@@ -121,26 +127,26 @@ class GenreController extends AbstractController
   public function searchGenre(Request $request): Response
   {
     $searchQuery = $request->query->get('search_query');
-    
+
     $queryBuilder = $this->em->createQueryBuilder();
     $queryBuilder
-    ->select('g') 
-    ->from('App\Entity\Genres', 'g');
- 
+      ->select('g')
+      ->from('App\Entity\Genres', 'g');
+
 
     $queryBuilder
-        ->andWhere("g.name LIKE :searchQuery")
-        ->setParameter('searchQuery', '%'.$searchQuery.'%');
+      ->andWhere("g.name LIKE :searchQuery")
+      ->setParameter('searchQuery', '%' . $searchQuery . '%');
 
 
     $Genres = $queryBuilder->getQuery()->getResult();
     $formattedGenres = [];
-    foreach($Genres as $genre) {
+    foreach ($Genres as $genre) {
       $formattedGenres[] = [
         'id' => $genre->getId(),
         'name' => $genre->getName()
 
-    ];
+      ];
     }
     return $this->json($formattedGenres);
   }
