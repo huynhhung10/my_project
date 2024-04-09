@@ -21,7 +21,7 @@
                             </div>
                             <div style="float:right ; width:100%" class="col-12 mt-3 d-flex justify-content-end">
                                 {{ form_widget(form.save) }}
-                                <a href="/admin/genres" class="btn btn-secondary">Quay về trang chủ</a>
+                                <a href="/customers" class="btn btn-secondary">Quay về trang chủ</a>
                             </div>
                         {{ form_end(form) }}
                 </div>
@@ -30,5 +30,43 @@
     </div>
 </div>
 
+<script>
+    window.onload = function() {
+        var imagePreview = document.getElementById('previewImg');
+        var imgInput = document.getElementById('img');
 
+        // Check if imgInput has value
+        if (imgInput.value) {
+            imagePreview.src = imgInput.value;
+        }
+    };
+    function previewImage(input) {
+        var imagePreview = document.getElementById('previewImg');
+        var imgInput = document.getElementById('img');
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imgInput.value = e.target.result;
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Trigger the file input when the button is clicked
+    document.getElementById('uploadBtn').addEventListener('click', function() {
+        document.getElementById('uploadBtn').click();
+    });
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        var passwordField = document.getElementById('customers_form_password');
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+        } else {
+            passwordField.type = "password";
+        }
+    });
+</script>
 {% endblock %}
