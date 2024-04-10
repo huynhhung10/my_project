@@ -22,7 +22,7 @@
     {% block body %}
     <!-- main -->
     <div class="main-w3layouts wrapper">
-      <h1>Creative SignUp Form</h1>
+      <h1>Tạo tài khoản mới</h1>
       <div class="main-agileinfo">
         <div class="agileits-top">
           {{ form_start(registrationForm) }}
@@ -33,9 +33,9 @@
             {{ form_row(registrationForm.plainPassword.second) }}
           
         
-            <button type="submit"=>SIGN UP</button>
+            <button type="submit">Đăng ký</button>
             {{form_end(registrationForm) }}
-          <p>Don't have an Account? <a href="/login"> Login Now!</a></p>
+          <p>Đã có tài khoản! <a href="/login"> Đăng nhập ngay</a></p>
         </div>
       </div>
      

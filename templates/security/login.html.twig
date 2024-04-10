@@ -63,8 +63,8 @@
         </div>
                 {% endif %}
 
-                <h1>Login</h1>
-                <p class="text-muted">Sign In to your account</p>
+                <h1>Đăng nhập</h1>
+                <p class="text-muted">Đăng nhập vào tài khoản</p>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
@@ -79,14 +79,14 @@
                       <i class="icon-lock"></i>
                     </span>
                   </div>
-                  <input class="form-control" name="password" id="inputPassword" type="password" placeholder="Password" autocomplete="current-password" required>
+                  <input class="form-control" name="password" id="inputPassword" type="password" placeholder="Nhập mật khẩu" autocomplete="current-password" required>
                 </div>
                 <div class="row">
                     <input type="hidden" name="_csrf_token"
                     value="{{ csrf_token('authenticate') }}" >
          
                   <div class="col-6">
-                    <button class="btn btn-primary px-4" type="submit">Login</button>
+                    <button class="btn btn-primary px-4" type="submit">Đăng nhập</button>
                   </div>
                  
                 </div>
@@ -95,9 +95,9 @@
             <div class="card text-white bg-primary py-5 d-md-down-none" style="width:44%">
               <div class="card-body text-center">
                 <div>
-                  <h2>Sign up</h2>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  <a href="/register" class="btn btn-primary active mt-3" type="button">Register Now!</a>
+                  <h2>Đăng ký</h2>
+                  <p>Chào mừng bạn đến với trang nhập của chúng tôi!Nếu chưa có tài khoản Xin vui nhấn vào link dưới đây để tạo tài khoản mới.</p>
+                  <a href="/register" class="btn btn-primary active mt-3" type="button">Tạo tài khoản!</a>
                 </div>
               </div>
             </div>
