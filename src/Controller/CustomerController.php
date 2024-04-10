@@ -101,13 +101,19 @@ class CustomerController extends AbstractController
    * Delete a customer.
    */
   #[Route('/admin/delete-customer/{id}', name: 'delete-customer')]
-  public function deleteCustomer(Request $request, $id)
+  public function deleteCustomer( $id)
   {
     $customer = $this->em->getRepository(Customers::class)->find($id);
-    if ($customer) {
-      $reviews = $this->em->getRepository(Reviews::class)->findBy(['customer' => $customer]);
-      foreach ($reviews as $review) {
-        $this->em->remove($review);
+    $queryBuilder = $this->em->createQueryBuilder();
+    $queryBuilder
+      ->select('m')
+      ->from('App\Entity\Reviews', 'm')
+      ->leftJoin('m.customer', 'g')
+      ->where("g.id= $id");
+    $review = $queryBuilder->getQuery()->getResult();
+    if ($customer || $review) {
+      foreach ($review as $r) {
+        $this->em->remove($r);
       }
       $this->em->remove($customer);
       $this->em->flush();

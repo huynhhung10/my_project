@@ -63,6 +63,13 @@ class MovieController extends AbstractController
     $form = $this->createForm(MoviesFormType::class, $movie);
     $form->handleRequest($request);
     if ($form->isSubmitted() && $form->isValid()) {
+      $title = $form->get('title')->getData();
+      $existingTitle = $this->em->getRepository(Movies::class)->findOneBy(['title' => $title]);
+
+      if ($existingTitle) {
+        $this->addFlash('error_title', 'Tiêu đề phim đã tồn tại.');
+        return $this->redirectToRoute('create-movie');
+      }
       $this->em->persist($movie);
       $this->em->flush();
 
@@ -83,7 +90,17 @@ class MovieController extends AbstractController
     $movie = $this->em->getRepository(Movies::class)->find($id);
     $form = $this->createForm(MoviesFormType::class, $movie);
     $form->handleRequest($request);
+    $title = $form->get('title')->getData();
+    $existingTitle = $this->em->getRepository(Movies::class)->findOneBy(['title' => $title]);
     if ($form->isSubmitted() && $form->isValid()) {
+      if ($existingTitle) {
+        if ($existingTitle->getId() != $id) {
+          $this->addFlash('error_title', 'Tiêu đề phim đã tồn tại.');
+          return $this->redirectToRoute('edit-movie', ['id' => $id]);
+        } else {
+          return $this->redirectToRoute('movies');
+        }
+      }
       $this->em->persist($movie);
       $this->em->flush();
 
@@ -98,13 +115,22 @@ class MovieController extends AbstractController
    * Delete a movie.
    */
   #[Route('/admin/delete-movie/{id}', name: 'delete-movie')]
-  public function deleteMovie(Request $request, $id)
+  public function deleteMovie( $id)
   {
     $movie = $this->em->getRepository(Movies::class)->find($id);
-    if ($movie) {
+    $queryBuilder = $this->em->createQueryBuilder();
+    $queryBuilder
+      ->select('m')
+      ->from('App\Entity\Reviews', 'm')
+      ->leftJoin('m.movie', 'g')
+      ->where("g.id= $id");
+    $review = $queryBuilder->getQuery()->getResult();
+    if ($movie || $review) {
+      foreach ($review as $r) {
+        $this->em->remove($r);
+      }
       $this->em->remove($movie);
       $this->em->flush();
-
       $this->addFlash('delete_movie', 'true');
       return $this->redirectToRoute('movies');
     }

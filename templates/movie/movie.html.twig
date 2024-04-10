@@ -1,5 +1,13 @@
 {% extends 'adminDashboard.html.twig' %}
 {% block body %}
+ {% if app.flashes('error_title') is not empty %}
+        <script>
+            window.onload = function() {
+                alert("Tiêu đề phim đã tồn tại");
+                {% do app.session.flashBag.clear('error_title') %}
+            };
+        </script>
+    {% endif %}
 <div class="body flex-grow-1 px-3">
     <div class="container-lg">
         <div class="card mb-4">
