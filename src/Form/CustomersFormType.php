@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Customers;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -16,7 +17,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
 /**
- * Customer formm type.
+ * Customer form type.
  */
 class CustomersFormType extends AbstractType {
 
@@ -30,12 +31,18 @@ class CustomersFormType extends AbstractType {
         'attr' => [
           'class' => 'form-control',
         ],
+        'constraints' => [
+          new NotBlank(['message' => 'Tên tài khoản không được để trống.']),
+        ],
       ])
       ->add('password', TextType::class, [
         'label' => 'Mật khẩu',
         'attr' => [
           'class' => 'form-control',
           'id' => 'passwordField',
+        ],
+        'constraints' => [
+          new NotBlank(['message' => 'Mật khẩu không được để trống.']),
         ],
       ])
       ->add('img')
@@ -87,6 +94,20 @@ class CustomersFormType extends AbstractType {
   public function configureOptions(OptionsResolver $resolver): void {
     $resolver->setDefaults([
       'data_class' => Customers::class,
+      'constraints' => [
+        new UniqueEntity([
+          'fields' => 'username',
+          'message' => 'Tên tài khoản đã tồn tại.',
+        ]),
+        new UniqueEntity([
+          'fields' => 'email',
+          'message' => 'Email đã tồn tại.',
+        ]),
+        new UniqueEntity([
+          'fields' => 'phonenumber',
+          'message' => 'Số điện thoại đã tồn tại.',
+        ]),
+      ],
     ]);
   }
 

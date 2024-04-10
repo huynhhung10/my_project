@@ -3,19 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Customers;
+use App\Entity\Reviews;
 use App\Form\CustomersFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * Customer Controller.
  */
-class CustomerController extends AbstractController
-{
+class CustomerController extends AbstractController {
   /**
    * Entity manager.
    *
@@ -29,8 +29,7 @@ class CustomerController extends AbstractController
    * @param \Doctrine\ORM\EntityManagerInterface $em
    *   The entity manager instance to manage database interactions.
    */
-  public function __construct(EntityManagerInterface $em)
-  {
+  public function __construct(EntityManagerInterface $em) {
     $this->em = $em;
   }
 
@@ -38,8 +37,7 @@ class CustomerController extends AbstractController
    * Show customers.
    */
   #[Route('/admin/customers', name: 'customers')]
-  public function index(Request $request, PaginatorInterface $paginator): Response
-  {
+  public function index(Request $request, PaginatorInterface $paginator): Response {
     $customers = $this->em->getRepository(Customers::class)->findAll();
     $pagination = $paginator->paginate(
       $customers,
@@ -55,8 +53,7 @@ class CustomerController extends AbstractController
    * Create customer.
    */
   #[Route('/admin/create-customer', name: 'create-customer')]
-  public function createCustomer(Request $request)
-  {
+  public function createCustomer(Request $request) {
     $customer = new Customers();
     $form = $this->createForm(CustomersFormType::class, $customer);
     $form->handleRequest($request);
@@ -76,8 +73,7 @@ class CustomerController extends AbstractController
    * Edit customer.
    */
   #[Route('/admin/edit-customer/{id}', name: 'edit-customer')]
-  public function editCustomer(Request $request, $id)
-  {
+  public function editCustomer(Request $request, $id) {
 
     $customer = $this->em->getRepository(Customers::class)->find($id);
     $form = $this->createForm(CustomersFormType::class, $customer);
@@ -98,10 +94,13 @@ class CustomerController extends AbstractController
    * Delete a customer.
    */
   #[Route('/admin/delete-customer/{id}', name: 'delete-customer')]
-  public function deleteCustomer(Request $request, $id)
-  {
+  public function deleteCustomer(Request $request, $id) {
     $customer = $this->em->getRepository(Customers::class)->find($id);
     if ($customer) {
+      $reviews = $this->em->getRepository(Reviews::class)->findBy(['customer' => $customer]);
+      foreach ($reviews as $review) {
+        $this->em->remove($review);
+      }
       $this->em->remove($customer);
       $this->em->flush();
 
@@ -110,12 +109,12 @@ class CustomerController extends AbstractController
     }
     return new Response('Invalid customer data', Response::HTTP_BAD_REQUEST);
   }
+
   /**
    * Search for customers.
    */
   #[Route('/admin/search-customer', name: 'search-customer')]
-  public function searchCustomer(Request $request): Response
-  {
+  public function searchCustomer(Request $request): Response {
     $searchQuery = $request->query->get('search_query');
     $searchField = $request->query->get('search_field');
     $queryBuilder = $this->em->createQueryBuilder();
@@ -127,4 +126,5 @@ class CustomerController extends AbstractController
     $customers = $queryBuilder->getQuery()->getResult();
     return $this->json($customers);
   }
+
 }
