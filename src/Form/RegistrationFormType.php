@@ -29,7 +29,7 @@ class RegistrationFormType extends AbstractType
                     new NotBlank(['message' => 'không được để trống.']),
                     new Email(['message' => 'Email không hợp lệ.']),
                 ],
-                'attr' => ['class' => 'form-control', 'autocomplete' => 'email', 'placeholder' => 'Email', 'name' => 'email']
+                'attr' => ['class' => 'text email', 'autocomplete' => 'email', 'placeholder' => 'Email', 'name' => 'email']
             ])
             // ->add('agreeTerms', CheckboxType::class, [
             //     'mapped' => false,
@@ -45,7 +45,7 @@ class RegistrationFormType extends AbstractType
                 'required' => true,
                 'type' => PasswordType::class,
                 'invalid_message' => 'The password fields must match.',
-                'attr' => ['autocomplete' => 'new-password', 'name' => 'psw'],
+                'attr' => ['autocomplete' => 'new-password', 'name' => 'password', 'class' => 'text'],
                 'constraints' => [
 
                     new NotBlank([
@@ -59,8 +59,8 @@ class RegistrationFormType extends AbstractType
                     ]),
 
                 ],
-                'first_options'  => ['label' => false],
-                'second_options' => ['label' => false],
+                'first_options'  => ['label' => false,  'attr' => ['autocomplete' => 'new-password', 'name' => 'password', 'class' => 'text', 'placeholder' => 'password'],],
+                'second_options' => ['label' => false, 'attr' => ['autocomplete' => 'new-password', 'name' => 'password', 'class' => 'text w3lpass', 'placeholder' => 'repeat password'],],
 
             ]);
     }

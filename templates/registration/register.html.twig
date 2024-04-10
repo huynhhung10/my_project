@@ -1,40 +1,58 @@
-{% extends 'adminDashboard.html.twig' %}
 
-{% block title %}Register{% endblock %}
-{% block body %}
-  
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <title>Creative Colorlib SignUp Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  {% block javascripts %}
+  <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+  {% endblock %}
+  <!-- Custom Theme files -->
+  {% block stylesheets %}
+  <link href="{{asset('backend/css/styles_register.css')}}" rel="stylesheet" type="text/css" media="all" />
 
-
-    <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-6">
-            <div class="card mx-4">
-              <div class="card-body p-4">
-                <h1>Register</h1>
-                <p class="text-muted">Create your account</p>
-                {{ form_start(registrationForm) }}
-               
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Email</span>
-                  </div>
-                  
-                  {{ form_row(registrationForm.email) }}
-                </div>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Password</span>
-                  </div>
-                 
-                  {{ form_row(registrationForm.plainPassword) }}
-                </div>
-             
-                <button type="submit" class="btn btn-block btn-success" >Create Account</button>
-                {{ form_end(registrationForm) }}
-              </div>
-            
-            </div>
-          </div>
+  <!-- //Custom Theme files -->
+  <!-- web font -->
+  <link href="//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i" rel="stylesheet">
+  <!-- //web font -->  
+  {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <!-- main -->
+    <div class="main-w3layouts wrapper">
+      <h1>Creative SignUp Form</h1>
+      <div class="main-agileinfo">
+        <div class="agileits-top">
+          {{ form_start(registrationForm) }}
+        
+            {{ form_row(registrationForm.email) }}
+         
+            {{ form_row(registrationForm.plainPassword.first) }}
+            {{ form_row(registrationForm.plainPassword.second) }}
+          
+        
+            <button type="submit"=>SIGN UP</button>
+            {{form_end(registrationForm) }}
+          <p>Don't have an Account? <a href="/login"> Login Now!</a></p>
         </div>
       </div>
-{% endblock %}
+     
+      <!-- //copyright -->
+      <ul class="colorlib-bubbles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+    {% endblock %}
+  </body>
+  </html>
