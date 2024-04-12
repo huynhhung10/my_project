@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CustomersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,6 +33,14 @@ class Customers
 
     #[ORM\Column]
     private ?bool $status = null;
+
+    #[ORM\OneToMany(targetEntity: Reviews::class, mappedBy: 'customer')]
+    private Collection $reviews;
+
+    public function __construct()
+    {
+        $this->reviews = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -105,6 +115,36 @@ class Customers
     public function setStatus(bool $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reviews>
+     */
+    public function getReviews(): Collection
+    {
+        return $this->reviews;
+    }
+
+    public function addReview(Reviews $review): static
+    {
+        if (!$this->reviews->contains($review)) {
+            $this->reviews->add($review);
+            $review->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReview(Reviews $review): static
+    {
+        if ($this->reviews->removeElement($review)) {
+            // set the owning side to null (unless already changed)
+            if ($review->getCustomer() === $this) {
+                $review->setCustomer(null);
+            }
+        }
 
         return $this;
     }

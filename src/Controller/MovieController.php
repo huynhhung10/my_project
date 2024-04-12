@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Genres;
 use App\Entity\Movies;
 use App\Form\MoviesFormType;
@@ -70,6 +71,7 @@ class MovieController extends AbstractController
         $this->addFlash('error_title', 'Tiêu đề phim đã tồn tại.');
         return $this->redirectToRoute('create-movie');
       }
+      $movie->setCreateat(new DateTime());
       $this->em->persist($movie);
       $this->em->flush();
 
@@ -97,9 +99,7 @@ class MovieController extends AbstractController
         if ($existingTitle->getId() != $id) {
           $this->addFlash('error_title', 'Tiêu đề phim đã tồn tại.');
           return $this->redirectToRoute('edit-movie', ['id' => $id]);
-        } else {
-          return $this->redirectToRoute('movies');
-        }
+        } 
       }
       $this->em->persist($movie);
       $this->em->flush();
@@ -149,12 +149,11 @@ class MovieController extends AbstractController
       ->select('m', 'g')
       ->from('App\Entity\Movies', 'm')
       ->leftJoin('m.Genre', 'g');
-
     if ($searchField === 'name') {
       $queryBuilder
         ->where("g.$searchField LIKE :searchQuery")
         ->setParameter('searchQuery', '%' . $searchQuery . '%');
-    } elseif ($searchField === 'name') {
+    } elseif ($searchField === 'title') {
       $queryBuilder
         ->where("m.$searchField LIKE :searchQuery")
         ->setParameter('searchQuery', '%' . $searchQuery . '%');

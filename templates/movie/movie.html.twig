@@ -1,37 +1,94 @@
 {% extends 'adminDashboard.html.twig' %}
+
 {% block body %}
- {% if app.flashes('error_title') is not empty %}
-        <script>
-            window.onload = function() {
-                alert("Tiêu đề phim đã tồn tại");
-                {% do app.session.flashBag.clear('error_title') %}
-            };
-        </script>
-    {% endif %}
+<head>
+    <!-- Other meta tags, CSS, etc. -->
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
 <div class="body flex-grow-1 px-3">
     <div class="container-lg">
         <div class="card mb-4">
             <div class="card-header">
-                <h4 class="mb-0">Thêm mới</h4>
-                <span class="small">Phim</span>
+                <h4 class="card-title">{{ form.vars.data.id is null ? 'Thêm phim' : 'Sửa thông tin phim'}}</h4>
             </div>
             <div class="card-body">
-                {{ form_start(form, {'attr': {'class': 'row g-3', 'style': 'padding: 20px'}}) }}
-                <div class="col-md-6 mb-3">
-                    <label for="inputTitle" class="form-label">Tiêu đề</label>
-                    {{ form_row(form.title, {'attr': {'class': 'form-control'}}) }}
+                <div class="row">
+                    <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
+                        <div class="mb-3 position-relative" id="imagePreview" style="width: 260.5px; height: 220px; overflow: hidden; border-radius: 50%; background-color: #f0f0f0;">
+                            <img id="previewImg" src="{{ asset('images/default_avt.jpg') }}" alt="Default Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="mt-2">
+                            <input type="file" id="uploadBtn" name="uploadBtn" class="form-control d-none" accept="image/png,image/jpeg,image/jpg" onchange="previewImage(this)">
+                            <label class="btn btn-primary" for="uploadBtn">Chọn ảnh</label>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        {{ form_start(form, {'attr': {'class': 'row g-3', 'enctype': 'multipart/form-data'}}) }}
+                            <div class="col-md-6">
+                                {{ form_row(form.title) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.genre, {'label': 'Thể loại', 'attr': {'class': 'form-control'}}) }}
+                            </div>
+                            <div style="height:125px" class="col-md-12">
+                                {{ form_row(form.decription) }}
+                            </div>
+                            <div style="display:none" class="col-md-6">
+                                {{ form_row(form.img, {'id': 'img'}) }}
+                            </div>
+                            <div class="col-12 mt-3 d-flex justify-content-end">
+                                {{ form_widget(form.save) }}
+                                <a href="/customers" class="btn btn-secondary">Quay về trang chủ</a>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label for="inputGenre" class="form-label">Thể loại</label>
-                    {{ form_row(form.genre, {'attr': {'class': 'form-control'}}) }}
-                </div>
-                <div class="col-12 mt-3 d-flex justify-content-end">
-                    {{ form_widget(form.save) }}
-                    <a href="/customers" class="btn btn-secondary">Quay về trang chủ</a>
-                </div>
-                {{ form_end(form) }}
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    window.onload = function() {
+        var imagePreview = document.getElementById('previewImg');
+        var imgInput = document.getElementById('img');
+
+        // Check if imgInput has value
+        if (imgInput.value) {
+            imagePreview.src = imgInput.value;
+        }
+    };
+function previewImage(input) {
+    var imagePreview = document.getElementById('previewImg');
+    var imgInput = document.getElementById('img');
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            var image = new Image();
+            image.src = e.target.result;
+            image.onload = function() {
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+                canvas.width = 260.5; // Set width
+                canvas.height = 220; // Set height
+                ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+                imagePreview.src = canvas.toDataURL(input.files[0].type);
+                imgInput.value = imagePreview.src; // Set the value of the input to the data URL of the image
+            };
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+    // Trigger the file input when the button is clicked
+    document.getElementById('uploadBtn').addEventListener('click', function() {
+        document.getElementById('uploadBtn').click();
+    });
+</script>
 {% endblock %}
+
