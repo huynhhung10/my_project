@@ -1,0 +1,106 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+	{% include 'user_page/block/head.html.twig' %}
+
+	<body>
+
+		<!--welcome -->
+		<section id="home" class="welcome-hero">
+
+			<div class="top-area">
+				<div
+					class="header-area">
+					<!-- Start Navigation -->
+					<nav class="navbar navbar-default bootsnav  navbar-sticky navbar-scrollspy" data-minus-value-desktop="70" data-minus-value-mobile="55" data-speed="1000">
+
+						<div
+							class="container">
+
+							<!-- Start Header Navigation -->
+							<div class="navbar-header">
+								<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+									<i class="fa fa-bars"></i>
+								</button>
+								<a class="navbar-brand" href="index.html">carvilla<span></span>
+								</a>
+
+							</div>
+							<!--/.navbar-header-->
+							<!-- End Header Navigation -->
+
+							<!-- Collect the nav links, forms, and other content for toggling -->
+								<div class="collapse navbar-collapse menu-ui-design" id="navbar-menu"> <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
+									<li class=" scroll active">
+										<a href="#home">home</a>
+									</li>
+									<li class="scroll">
+										<a href="#service">service</a>
+									</li>
+									<li class="scroll">
+										<a href="#featured-cars">featured cars</a>
+									</li>
+									<li class="scroll">
+										<a href="#new-cars">new cars</a>
+									</li>
+									<li class="scroll">
+										<a href="#brand">brands</a>
+									</li>
+									<li class="scroll">
+										<a href="#contact">contact</a>
+									</li>
+								</ul>
+								<!--/.nav -->
+							</div>
+							<!-- /.navbar-collapse -->
+						</div>
+						<!--/.container-->
+					</nav>
+					<!--/nav-->
+					<!-- End Navigation -->
+				</div>
+				<!--/.header-area-->
+				<div class="clearfix"></div>
+
+			</div>
+			<!-- /.top-area-->
+			<!-- top-area End -->
+<div style="width: 90%; height: 100%" class="container welcome-hero-txt">
+
+<div style="background-color:white; width: 100%; height: 100%" class="row justify-content-center">
+		<div class="col-md-8">
+			<h2 class="text-center">Sản phẩm cơ</h2>
+			<p class="text-center">Đây là sản phẩm cơ của chúng tôi.</p>
+			<ul class="list-group">
+				<li class="list-group-item">
+					<strong>Mô tả:</strong>
+					Sản phẩm cơ là sản phẩm cơ bản trong danh mục của chúng tôi.</li>
+				<li class="list-group-item">
+					<strong>Giá:</strong>
+					$1000</li>
+				<li class="list-group-item">
+					<strong>Màu sắc:</strong>
+					Đen</li>
+				<li class="list-group-item">
+					<strong>Thương hiệu:</strong>
+					CarVilla</li>
+			</ul>
+			<a href="#featured-cars" class="btn btn-primary d-block mx-auto mt-3">Xem các sản phẩm nổi bật</a>
+		</div>
+	</div>
+</div>
+
+		</section>
+
+		<!--contact start-->
+		<footer id="contact" class="contact">
+
+			{% include 'user_page/block/contact.html.twig' %}
+
+		</footer>
+
+		{% include 'user_page/block/endscript.html.twig' %}
+
+	</body>
+
+</html>
