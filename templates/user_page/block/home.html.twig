@@ -62,7 +62,9 @@
 		<p>
 			Khám phá và cập nhật thông tin mới nhất về hàng ngàn bộ phim đa dạng từ mọi thể loại và quốc gia. Nơi bạn có thể đắm mình trong không gian điện ảnh
 		</p>
-		<button class="welcome-btn" onclick="window.location.href='#'">Liên hệ</button>
+		<button class="welcome-btn">
+			<a style="color:white" href="#contact">Liên hệ</a>
+		</button>
 	</div>
 </div>
 
@@ -70,39 +72,41 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="model-search-content">
-				<div class="row">
-					<div class="col-md-offset-1 col-md-2 col-sm-12">
-						<div class="single-model-search">
-							<h2>Tìm kiếm theo</h2>
-							<div class="model-select-icon">
-								<select class="form-control">
-									<option value="default">Thể loại</option>
-									<option value="2018">Tên phim</option>
-								</select>
-								<!-- /.select-->
+				<form id="search-form" action="#" method="GET">
+					<div class="row">
+						<div class="col-md-offset-1 col-md-2 col-sm-12">
+							<div class="single-model-search">
+								<h2>Tìm kiếm theo</h2>
+								<div class="model-select-icon">
+									<select class="form-control" name="search_field" id="search_field">
+										<option value="name">Thể loại</option>
+										<option value="title">Tên phim</option>
+									</select>
+									<!-- /.select-->
+								</div>
+								<!-- /.model-select-icon -->
 							</div>
-							<!-- /.model-select-icon -->
 						</div>
-					</div>
-					<div class="col-md-offset-1 col-md-4 col-sm-12">
-						<div class="single-model-search">
-							<h2>Nội dung tìm kiếm</h2>
-							<div class="model-select-icon">
-								<input
-								type="text" class="form-control" placeholder="Nhập nội dung...">
-							<!-- /.input -->
+						<div class="col-md-offset-1 col-md-4 col-sm-12">
+							<div class="single-model-search">
+								<h2>Nội dung tìm kiếm</h2>
+								<div class="model-select-icon">
+									<input
+									type="text" name="search_query" class="form-control" placeholder="Nhập nội dung...">
+								<!-- /.input -->
+								</div>
+								<!-- /.model-select-icon -->
 							</div>
-							<!-- /.model-select-icon -->
+						</div>
+						<div class="col-md-2 col-sm-12">
+							<div class="single-model-search text-center">
+								<button class="welcome-btn model-search-btn" type="submit">
+									search
+								</button>
+							</div>
 						</div>
 					</div>
-					<div class="col-md-2 col-sm-12">
-						<div class="single-model-search text-center">
-							<button class="welcome-btn model-search-btn" onclick="window.location.href='#'">
-								search
-							</button>
-						</div>
-					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 	</div>

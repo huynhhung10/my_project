@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Movies;
 use App\Entity\Reviews;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,12 +39,16 @@ class UserPageController extends AbstractController {
   public function index(): Response {
     $movies = $this->em->getRepository(Movies::class)->findAll();
     $ratings = [];
+    $good_reviews = [];
     foreach ($movies as $movie){
         $reviews = $movie->getReviews();
         $totalRating = 0;
         $reviewCount = count($reviews);
         if ($reviewCount > 0) {
             foreach ($reviews as $review){
+                if($review->getRating() == 5) {
+                  $good_reviews[] = $review;
+                }
                 $totalRating += $review->getRating(); 
             }
             $avgRating = $totalRating / $reviewCount;
@@ -55,7 +60,8 @@ class UserPageController extends AbstractController {
     return $this->render('user_page/index.html.twig', [
         'movies' => $movies,
         'ratings' => $ratings,
-    ]);
+        'good_reviews' => $good_reviews,
+      ]);
 }
 
     /**
@@ -67,5 +73,59 @@ class UserPageController extends AbstractController {
         'controller_name' => 'UserPageController',
       ]);
     }
-
+/**
+   * Search for movies.
+   */
+  #[Route('/user/search-movie', name: 'search-movie')]
+  public function searchMovie(Request $request): Response
+  {
+    $searchQuery = $request->query->get('search_query');
+    $searchField = $request->query->get('search_field');
+    $queryBuilder = $this->em->createQueryBuilder();
+    $queryBuilder
+      ->select('m', 'g')
+      ->from('App\Entity\Movies', 'm')
+      ->leftJoin('m.Genre', 'g');
+    if ($searchField === 'name') {
+      $queryBuilder
+        ->where("g.$searchField LIKE :searchQuery")
+        ->setParameter('searchQuery', '%' . $searchQuery . '%');
+    } elseif ($searchField === 'title') {
+      $queryBuilder
+        ->where("m.$searchField LIKE :searchQuery")
+        ->setParameter('searchQuery', '%' . $searchQuery . '%');
+    }
+    $ratings = [];
+    $movies = $queryBuilder->getQuery()->getResult();
+    $formattedMovies = [];
+    foreach ($movies as $movie) {
+      $reviews = $movie->getReviews();
+        $totalRating = 0;
+        $reviewCount = count($reviews);
+        if ($reviewCount > 0) {
+            foreach ($reviews as $review){
+                $totalRating += $review->getRating(); 
+            }
+            $avgRating = $totalRating / $reviewCount;
+            $ratings[$movie->getId()] = $avgRating;
+        } else {
+            $ratings[$movie->getId()] = 0;
+        }
+      $formattedMovies[] = [
+        'id' => $movie->getId(),
+        'title' => $movie->getTitle(),
+        'img' => $movie->getImg(),
+        'decription' => $movie->getDecription(),
+        'genre' => [
+          'id' => $movie->getGenre()->getId(),
+          'name' => $movie->getGenre()->getName()
+        ]
+      ];
+    }
+    $data = [
+      'movies' => $formattedMovies,
+      'ratings' => $ratings
+    ];
+    return $this->json($data);
+  }
 }
