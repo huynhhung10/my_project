@@ -6,28 +6,28 @@
     <!--/.section-header-->
     <div class="new-cars-content">
         <div class="owl-carousel owl-theme" id="new-cars-carousel">
-            {% for movie in movies %}
+            {% for new_movie in new_movies %}
                 <div class="new-cars-item">
                     <div class="single-new-cars-item">
                         <div class="row">
                             <div class="col-md-7 col-sm-12">
                                 <div class="new-cars-img">
-                                    <img style="width:653px; height:296px" src="{{ movie.img }}" alt="img"/>
+                                    <img style="object-fit: cover; width:653px; height:296px" src="{{ new_movie.img }}" alt="img"/>
                                 </div>
                             </div>
                             <div class="col-md-5 col-sm-12">
                                 <div class="new-cars-txt">
                                     <h2>
-                                        <a href="#">{{ movie.title }}</a>
+                                        <a href="#">{{ new_movie.title }}</a>
                                     </h2>
-                                    {% set words = movie.decription|split(' ') %}
+                                    {% set words = new_movie.decription|split(' ') %}
                                     {% set limited_decription = words|slice(0, 65)|join(' ') %}
                                     {% if words|length > 65 %}
                                         <p>{{ limited_decription }}...</p>
                                     {% else %}
-                                        <p>{{ movie.decription }}</p>
+                                        <p>{{ new_movie.decription }}</p>
                                     {% endif %}
-                                    <button class="welcome-btn new-cars-btn" onclick="#">Xem chi tiết</button>
+                                    <button class="welcome-btn new-cars-btn" onclick="window.location.href='/detail-product/{{new_movie.id}}'">Xem chi tiết</button>
                                 </div>
                             </div>
                         </div>

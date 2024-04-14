@@ -12,12 +12,12 @@
 					<div class="single-featured-cars">
 						<div class="featured-img-box">
 							<div class="featured-cars-img">
-								<img src="{{ movie.img }}" alt="cars">
+								<img style="object-fit: cover;" src="{{ movie.img }}" alt="cars">
 							</div>
 						</div>
 						<div class="featured-cars-txt">
 							<h2>
-								<a href="#">{{ movie.title }}</a>
+								<a href="/detail-product/{{movie.id}}">{{ movie.title }}</a>
 							</h2>
                             {% set stars = ratings[movie.id]|default(0) %}
                             {% set full_stars = stars|round(0, 'floor') %}
@@ -37,7 +37,6 @@
                                     <i class="far fa-star"></i>
                                 {% endfor %}
                                 {% endif %}
-
                             </h3>
 							{% set words = movie.decription|split(' ') %}
 							{% set limited_decription = words|slice(0, 20)|join(' ') %}

@@ -38,6 +38,10 @@ class UserPageController extends AbstractController {
   #[Route('/user-page', name: 'app_user_page')]
   public function index(): Response {
     $movies = $this->em->getRepository(Movies::class)->findAll();
+    usort($movies, function($a, $b) {
+      return $b->getCreateat() <=> $a->getCreateat();
+    });
+    $new_movies = array_slice($movies, 0, 3);
     $ratings = [];
     $good_reviews = [];
     foreach ($movies as $movie){
@@ -61,16 +65,18 @@ class UserPageController extends AbstractController {
         'movies' => $movies,
         'ratings' => $ratings,
         'good_reviews' => $good_reviews,
+        'new_movies' => $new_movies
       ]);
 }
 
     /**
    * Inherit docs.
    */
-    #[Route('/detail-product', name: 'detail_product')]
-    public function detail(): Response {
+    #[Route('/detail-product/{id}', name: 'detail_product')]
+    public function detail($id): Response {
+      $movie = $this->em->getRepository(Movies::class)->find($id);
       return $this->render('user_page/detail.html.twig', [
-        'controller_name' => 'UserPageController',
+          'movie' => $movie,       
       ]);
     }
 /**

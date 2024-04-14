@@ -1,106 +1,123 @@
 <!doctype html>
 <html class="no-js" lang="en">
+    {% include 'user_page/block/head.html.twig' %}
+    <body>
+        <section id="home" class="welcome-hero">
+            <div class="top-area">
+                <div class="header-area">
+                    <nav class="navbar navbar-default bootsnav navbar-sticky navbar-scrollspy" data-minus-value-desktop="70" data-minus-value-mobile="55" data-speed="1000">
+                        <div class="container">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+                                    <i class="fa fa-bars"></i>
+                                </button>
+                                <a class="navbar-brand" href="{{path('app_user_page')}}">carvilla<span></span>
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div style="vertical-align: middle;width: 100%; height: 100%; padding: 120px 200px 120px 200px;" class="container welcome-hero-txt">
 
-	{% include 'user_page/block/head.html.twig' %}
+                <div style=" position: relative; min-width: 100%; background: white; padding:0px 0px 0px 0px">
+                    <div style="background: white; float:left; width:64%; margin: 0px 0px 0px 0px; padding: 30px 0px 30px 30px;" class="row">
+                        <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
+                            <div style="height: auto; width: 100%; border-radius: 5px; overflow: hidden;">
+                                <img src="{{movie.img}}" alt="Movie Image" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div style="float:left" class="col-md-12">
+                                <p style="color:black; font-size:40px">{{movie.title}}</p>
+                            </div>
+                            <div class="col-md-14">
+                                <p style="color:black; font-size:14px">{{movie.decription}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="overflow-y: auto;  background: #eef2f500; float: right; width:30%; margin: 0px 0px 0px 0px; padding: 0px 20px 20px 12px;" class="row">
+                        <button onclick="openSearch()" style="background: white;font-size:13px; border-radius: 5px white; height: 35px; margin: 0px 18px 20px 0px; width: 96%;" type="button">+ Thêm đánh giá của bạn !
+                        </button>
+                        <div style="overflow-y: auto; max-height:400px;">
+						{% for review in movie.reviews %}
+                            <div style="margin-bottom: 20px; width: 350px; background-color: white; border-radius: 4px; box-shadow: 10px 10px 5px #aaaaaa;">
+                                <span style="text-align: justify;font-size: 13px;font-weight: 500; color: #56575b;">{{review.reviewtext}}</span>
+                                <div class="" style=" height: 25px; ">
+                                    <div style="margin: 0px 0px 0px 10px; float: left;"><img style="margin: 0px 0px 3px 0px;" src="https://i.imgur.com/AgAC1Is.jpg" width="18"><span style="font-size: 13px; font-weight: 500; margin-left: 6px; color: #56575b;">Martha</span>
+                                    </div>
+                                    <div style="margin-right: 5px; float: right;">
+                                        {% set full_stars = review.rating %}
+                                        {% set empty_stars = 5 - full_stars %}
+										{% if full_stars != 0 %}
+										{% for i in range(1, full_stars) %}
+											<i class="fas fa-star"></i>
+										{% endfor %}
+										{% endif %}
+										{% if empty_stars !=0 %}
+										{% for i in range(1, empty_stars) %}
+											<i class="far fa-star"></i>
+										{% endfor %}
+										{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+						{% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer id="contact" class="contact">
+            {% include 'user_page/block/contact.html.twig' %}
+        </footer>
+        {% include 'user_page/block/endscript.html.twig' %}
+    </body>
 
-	<body>
+    <div id="myOverlay" class="overlay">
+        <span class="closebtn" onclick="closeSearch()" title="Close Overlay">x</span>
+        <div style="left: -533px; position: relative; top: 30%; text-align: center; overflow-y: auto; max-height: 600px; background: #eef2f5; float: right; width: 35%; margin: 0; padding: 20px;" class="row">
+            <form id="reviewForm" style="padding: 20px; border-radius: 8px; background-color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <label for="content" style="font-size: 18px; color: #333;">Content:</label><br>
+                <textarea id="content" name="content" rows="4" style="width: 100%; margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+                <div id="starRating" style="margin-bottom: 20px;">
+                    <span class="star" data-rating="1" style="color: gray; font-size: 24px; cursor: pointer;">★</span>
+                    <span class="star" data-rating="2" style="color: gray; font-size: 24px; cursor: pointer;">★</span>
+                    <span class="star" data-rating="3" style="color: gray; font-size: 24px; cursor: pointer;">★</span>
+                    <span class="star" data-rating="4" style="color: gray; font-size: 24px; cursor: pointer;">★</span>
+                    <span class="star" data-rating="5" style="color: gray; font-size: 24px; cursor: pointer;">★</span>
+                </div>
+                <input type="submit" value="Submit" style="background-color: #4e4ffa; color: white; padding: 14px 20px; border: none; border-radius: 4px; cursor: pointer;">
+            </form>
+        </div>
 
-		<!--welcome -->
-		<section id="home" class="welcome-hero">
-
-			<div class="top-area">
-				<div
-					class="header-area">
-					<!-- Start Navigation -->
-					<nav class="navbar navbar-default bootsnav  navbar-sticky navbar-scrollspy" data-minus-value-desktop="70" data-minus-value-mobile="55" data-speed="1000">
-
-						<div
-							class="container">
-
-							<!-- Start Header Navigation -->
-							<div class="navbar-header">
-								<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
-									<i class="fa fa-bars"></i>
-								</button>
-								<a class="navbar-brand" href="index.html">carvilla<span></span>
-								</a>
-
-							</div>
-							<!--/.navbar-header-->
-							<!-- End Header Navigation -->
-
-							<!-- Collect the nav links, forms, and other content for toggling -->
-								<div class="collapse navbar-collapse menu-ui-design" id="navbar-menu"> <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
-									<li class=" scroll active">
-										<a href="#home">home</a>
-									</li>
-									<li class="scroll">
-										<a href="#service">service</a>
-									</li>
-									<li class="scroll">
-										<a href="#featured-cars">featured cars</a>
-									</li>
-									<li class="scroll">
-										<a href="#new-cars">new cars</a>
-									</li>
-									<li class="scroll">
-										<a href="#brand">brands</a>
-									</li>
-									<li class="scroll">
-										<a href="#contact">contact</a>
-									</li>
-								</ul>
-								<!--/.nav -->
-							</div>
-							<!-- /.navbar-collapse -->
-						</div>
-						<!--/.container-->
-					</nav>
-					<!--/nav-->
-					<!-- End Navigation -->
-				</div>
-				<!--/.header-area-->
-				<div class="clearfix"></div>
-
-			</div>
-			<!-- /.top-area-->
-			<!-- top-area End -->
-<div style="width: 90%; height: 100%" class="container welcome-hero-txt">
-
-<div style="background-color:white; width: 100%; height: 100%" class="row justify-content-center">
-		<div class="col-md-8">
-			<h2 class="text-center">Sản phẩm cơ</h2>
-			<p class="text-center">Đây là sản phẩm cơ của chúng tôi.</p>
-			<ul class="list-group">
-				<li class="list-group-item">
-					<strong>Mô tả:</strong>
-					Sản phẩm cơ là sản phẩm cơ bản trong danh mục của chúng tôi.</li>
-				<li class="list-group-item">
-					<strong>Giá:</strong>
-					$1000</li>
-				<li class="list-group-item">
-					<strong>Màu sắc:</strong>
-					Đen</li>
-				<li class="list-group-item">
-					<strong>Thương hiệu:</strong>
-					CarVilla</li>
-			</ul>
-			<a href="#featured-cars" class="btn btn-primary d-block mx-auto mt-3">Xem các sản phẩm nổi bật</a>
-		</div>
-	</div>
-</div>
-
-		</section>
-
-		<!--contact start-->
-		<footer id="contact" class="contact">
-
-			{% include 'user_page/block/contact.html.twig' %}
-
-		</footer>
-
-		{% include 'user_page/block/endscript.html.twig' %}
-
-	</body>
-
+    </div>
 </html>
+<script>
+    const stars = document.querySelectorAll('.star');
+    const ratingInput = document.createElement('input');
+    ratingInput.setAttribute('type', 'hidden');
+    ratingInput.setAttribute('name', 'rating');
+    document.getElementById('reviewForm').appendChild(ratingInput);
+
+    stars.forEach((star) => {
+        star.addEventListener('click', () => {
+            const rating = star.getAttribute('data-rating');
+            ratingInput.value = rating;
+            stars.forEach((s, index) => {
+                if (index < rating) {
+                    s.style.color = 'gold';
+                } else {
+                    s.style.color = 'gray';
+                }
+            });
+        });
+    });
+    function openSearch() {
+        document.getElementById("myOverlay").style.display = "block";
+    }
+    function closeSearch() {
+        document.getElementById("myOverlay").style.display = "none";
+    }
+</script>
