@@ -21,15 +21,7 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $phoneNumber = $user->getPhone();
-            $existingUser = $entityManager->getRepository(User::class)->findOneBy(['phone' => $phoneNumber]);
 
-            // if ($existingUser) {
-            //     // Số điện thoại đã tồn tại trong cơ sở dữ liệu, bạn có thể xử lý tùy ý, ví dụ:
-            //     $this->addFlash('error', 'Số điện thoại đã được sử dụng.');
-
-            //     return $this->redirectToRoute('app_register');
-            // }
             // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(

@@ -146,7 +146,7 @@ h1 {
   padding: 3em;
 }
 
-input[type="text"],input[type="tel"], input[type="email"], input[type="password"] {
+input[type="text"], input[type="email"], input[type="password"] {
   font-size: 0.9em;
   color: #fff;
   font-weight: 100;
@@ -166,7 +166,7 @@ input[type="text"],input[type="tel"], input[type="email"], input[type="password"
   font-family: 'Roboto', sans-serif;
 }
 
-input.email, input.tel, input.text.w3lpass {
+input.email, input.text.w3lpass {
   margin: 2em 0;
 }
 
@@ -543,7 +543,7 @@ input.checkbox:checked:after {
 
 /*-- responsive-design --*/
 @media(max-width:1440px) {
-  input[type="text"],input[type="tel"], input[type="email"], input[type="password"] {
+  input[type="text"], input[type="email"], input[type="password"] {
     width: 94%;
   }
 }
@@ -599,7 +599,7 @@ input.checkbox:checked:after {
     width: 58%;
   }
 
-  input[type="text"],input[type="tel"], input[type="email"], input[type="password"] {
+  input[type="text"], input[type="email"], input[type="password"] {
     width: 93%;
   }
 }
@@ -626,8 +626,8 @@ input.checkbox:checked:after {
   .agileits-top {
     padding: 2.2em;
   }
- 
-  input.email, input.tel, input.text.w3lpass {
+
+  input.email, input.text.w3lpass {
     margin: 1.5em 0;
   }
 
@@ -663,7 +663,7 @@ input.checkbox:checked:after {
     padding: 1.8em;
   }
 
-  input[type="text"],input[type="tel"], input[type="email"], input[type="password"] {
+  input[type="text"], input[type="email"], input[type="password"] {
     width: 91%;
   }
 
@@ -739,7 +739,7 @@ input.checkbox:checked:after {
     margin: 0 0 1em;
   }
 
-  input[type="text"],input[type="tel"], input[type="email"], input[type="password"] {
+  input[type="text"], input[type="email"], input[type="password"] {
     width: 89.5%;
     font-size: 0.85em;
   }
