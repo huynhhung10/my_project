@@ -45,7 +45,7 @@
                             <div style="margin-bottom: 20px; width: 350px; background-color: white; border-radius: 4px; box-shadow: 10px 10px 5px #aaaaaa;">
                                 <span style="text-align: justify;font-size: 13px;font-weight: 500; color: #56575b;">{{review.reviewtext}}</span>
                                 <div class="" style=" height: 25px; ">
-                                    <div style="margin: 0px 0px 0px 10px; float: left;"><img style="margin: 0px 0px 3px 0px;" src="https://i.imgur.com/AgAC1Is.jpg" width="18"><span style="font-size: 13px; font-weight: 500; margin-left: 6px; color: #56575b;">Martha</span>
+                                    <div style="margin: 0px 0px 0px 10px; float: left;"><img style="margin: 0px 0px 3px 0px;" src="{{review.customer.img}}" width="18"><span style="font-size: 13px; font-weight: 500; margin-left: 6px; color: #56575b;">{{review.customer.username}}</span>
                                     </div>
                                     <div style="margin-right: 5px; float: right;">
                                         {% set full_stars = review.rating %}
