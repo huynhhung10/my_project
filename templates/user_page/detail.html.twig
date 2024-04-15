@@ -77,39 +77,46 @@
 
     <div id="myOverlay" class="overlay">
         <span class="closebtn" onclick="closeSearch()" title="Close Overlay">x</span>
-        <div style="left: -533px; position: relative; top: 30%; text-align: center; overflow-y: auto; max-height: 600px; background: #eef2f5; float: right; width: 35%; margin: 0; padding: 20px;" class="row">
-            <form id="reviewForm" style="padding: 20px; border-radius: 8px; background-color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                <label for="content" style="font-size: 18px; color: #333;">Content:</label><br>
-                <textarea id="content" name="content" rows="4" style="width: 100%; margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+        <div style="left: -533px; position: relative; top: 15%; text-align: center; overflow-y: auto; max-height: 600px; background: #eef2f5; float: right; width: 35%; margin: 0; padding: 20px;" class="row">
+            
+
+            {{ form_start(form_review, {'attr': {'style': 'padding: 20px 80px 100px; border-radius: 8px; background-color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);'}}) }}
+                 {{ form_row(form_review.img, {'id': 'img'}) }}
+                {{ form_row(form_review.username) }}
+                {{ form_row(form_review.email) }}
+                {{ form_row(form_review.phonenumber) }}
+                {{ form_row(form_review.reviewtext) }}
                 <div id="starRating" style="margin-bottom: 20px;">
-                    <span class="star" data-rating="1" style="color: gray; font-size: 24px; cursor: pointer;">★</span>
-                    <span class="star" data-rating="2" style="color: gray; font-size: 24px; cursor: pointer;">★</span>
-                    <span class="star" data-rating="3" style="color: gray; font-size: 24px; cursor: pointer;">★</span>
-                    <span class="star" data-rating="4" style="color: gray; font-size: 24px; cursor: pointer;">★</span>
-                    <span class="star" data-rating="5" style="color: gray; font-size: 24px; cursor: pointer;">★</span>
+                    {% for i in 1..5 %}
+                    <span class="star" data-rating="{{ i }}" style="color: gray; font-size: 24px; cursor: pointer;">★</span>
+                {% endfor %}
+                {{ form_widget(form_review.rating) }}
                 </div>
-                <input type="submit" value="Submit" style="background-color: #4e4ffa; color: white; padding: 14px 20px; border: none; border-radius: 4px; cursor: pointer;">
-            </form>
+
+                {{ form_row(form_review.save) }}
+                {{ form_end(form_review) }}
+               
         </div>
 
     </div>
 </html>
-<script>
-    const stars = document.querySelectorAll('.star');
-    const ratingInput = document.createElement('input');
-    ratingInput.setAttribute('type', 'hidden');
-    ratingInput.setAttribute('name', 'rating');
-    document.getElementById('reviewForm').appendChild(ratingInput);
 
-    stars.forEach((star) => {
-        star.addEventListener('click', () => {
-            const rating = star.getAttribute('data-rating');
-            ratingInput.value = rating;
-            stars.forEach((s, index) => {
-                if (index < rating) {
-                    s.style.color = 'gold';
+{% block javascripts %}
+
+<script>
+    document.querySelectorAll('.star').forEach(function(star) {
+        star.addEventListener('click', function() {
+            // Set the value of the hidden input field to the rating selected by the user
+            document.querySelector('#{{ form_review.rating.vars.id }}').value = this.getAttribute('data-rating');
+            
+            // Update the styling of stars based on the selected rating
+            var rating = parseInt(this.getAttribute('data-rating'));
+            document.querySelectorAll('.star').forEach(function(star) {
+                var starRating = parseInt(star.getAttribute('data-rating'));
+                if (starRating <= rating) {
+                    star.style.color = 'gold';
                 } else {
-                    s.style.color = 'gray';
+                    star.style.color = 'gray';
                 }
             });
         });
@@ -120,4 +127,35 @@
     function closeSearch() {
         document.getElementById("myOverlay").style.display = "none";
     }
+    window.onload = function() {
+        var imagePreview = document.getElementById('previewImg');
+        var imgInput = document.getElementById('img');
+
+        // Check if imgInput has value
+        if (imgInput.value) {
+            imagePreview.src = imgInput.value;
+        }
+    };
+    function previewImage(input) {
+        var imagePreview = document.getElementById('previewImg');
+        var imgInput = document.getElementById('img');
+    
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imgInput.value = e.target.result;
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }else{
+            imagePreview.src = "{{ asset('frontend/img/account/blank.jpg') }}";
+        }
+    }
+    // Trigger the file input when the button is clicked
+    document.getElementById('uploadBtn').addEventListener('click', function() {
+        document.getElementById('uploadBtn').click();
+    });
 </script>
+{% endblock %}

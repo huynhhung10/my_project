@@ -69,7 +69,7 @@ class Reviews
 
     public function getRating(): ?int
     {
-        return $this->rating;
+        return $this->rating ?? 0;
     }
 
     public function setRating(int $rating): static

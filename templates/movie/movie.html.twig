@@ -82,6 +82,8 @@ function previewImage(input) {
         };
 
         reader.readAsDataURL(input.files[0]);
+    }else{
+        imagePreview.src = "{{ asset('frontend/img/account/blank.jpg') }}";
     }
 }
 
