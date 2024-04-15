@@ -94,6 +94,7 @@ class UserPageController extends AbstractController
       $customer->setEmail($formData['email']);
       $customer->setImg($formData['img']);
       $customer->setPhonenumber($formData['phonenumber']);
+      $customer->setStatus(1);
 
       // Create a new Review entity
       $review = new Reviews();
@@ -174,14 +175,5 @@ class UserPageController extends AbstractController
       'ratings' => $ratings
     ];
     return $this->json($data);
-  }
-
-  public function new(Request $request, $id): Response
-  {
-
-
-    return $this->render('review/new.html.twig', [
-      'form_review' => $form->createView(),
-    ]);
   }
 }

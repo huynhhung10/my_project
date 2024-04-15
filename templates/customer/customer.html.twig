@@ -29,12 +29,12 @@
                             <div class="col-md-6">
                                 {{ form_row(form.username) }}
                             </div>
-                            <div class="col-md-6 d-flex align-items-center">
+                            {# <div class="col-md-6 d-flex align-items-center">
                                 <div class="w-100"> 
                                     {{ form_row(form.password, {'type': 'password'}) }}
                                 </div>
                                 <button style="margin-top:32px" type="button" id="togglePassword" class="btn btn-secondary ms-2"><i class="fas fa-eye"></i></button>
-                            </div>
+                            </div> #}
                             <div class="col-md-6">
                                 {{ form_row(form.email) }}
                             </div>
@@ -45,7 +45,7 @@
                                 {{ form_row(form.img, {'id': 'img'}) }}
                             </div>
                             <div class="col-md-6">
-                                <div class="form-check form-switch mt-3">
+                                <div style="padding-top: 20px;" class="form-check form-switch mt-3">
                                     {{ form_widget(form.status) }}
                                     {{ form_label(form.status, 'Trạng thái hoạt động', {'label_attr': {'class': 'form-check-label'}, 'id': 'statusId'}) }}
                                 </div>

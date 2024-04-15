@@ -35,16 +35,6 @@ class CustomersFormType extends AbstractType {
           new NotBlank(['message' => 'Tên tài khoản không được để trống.']),
         ],
       ])
-      ->add('password', TextType::class, [
-        'label' => 'Mật khẩu',
-        'attr' => [
-          'class' => 'form-control',
-          'id' => 'passwordField',
-        ],
-        'constraints' => [
-          new NotBlank(['message' => 'Mật khẩu không được để trống.']),
-        ],
-      ])
       ->add('img')
       ->add('email', EmailType::class, [
         'label' => 'Email',
