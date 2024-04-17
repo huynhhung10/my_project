@@ -135,10 +135,33 @@ class CustomerController extends AbstractController
     $queryBuilder = $this->em->createQueryBuilder();
     $queryBuilder
       ->select('c')
-      ->from('App\Entity\Customers', 'c')
-      ->where("c.$searchField LIKE :searchQuery")
-      ->setParameter('searchQuery', '%' . $searchQuery . '%');
-    $customers = $queryBuilder->getQuery()->getResult();
-    return $this->json($customers);
+      ->from('App\Entity\Customers', 'c');
+    
+      if ($searchField === 'username') {
+        $queryBuilder
+        ->andWhere("c.username LIKE :searchQuery")
+          ->setParameter('searchQuery', '%' . $searchQuery . '%');
+      } elseif ($searchField === 'email') {
+        $queryBuilder
+          ->andWhere("c.email LIKE :searchQuery")
+          ->setParameter('searchQuery', '%' . $searchQuery . '%');
+      } elseif ($searchField === 'phonenumber') {
+        $queryBuilder
+          ->andWhere("c.phonenumber LIKE :searchQuery")
+          ->setParameter('searchQuery', '%' . $searchQuery . '%');
+      }
+    $Customers = $queryBuilder->getQuery()->getResult();
+    $formattedCustomer = [];
+    foreach ($Customers as $c) {
+      $formattedCustomer[] = [
+        'id' => $c->getId(),
+        'img'=>$c->getImg(),
+        'username' => $c->getUsername(),
+        'email' => $c->getEmail(),
+        'phonenumber'=>$c->getPhonenumber(),
+        'status'=>$c->isStatus()
+      ];
+    }
+    return $this->json($formattedCustomer );
   }
 }
