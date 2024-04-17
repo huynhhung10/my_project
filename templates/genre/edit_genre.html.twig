@@ -1,0 +1,32 @@
+{% extends 'adminDashboard.html.twig' %}
+{% block body %}
+<div class="body flex-grow-1 px-3">
+        <div class="container-lg">
+          <div class="car"></div>
+            <div class="card mb-4">
+                <div class="card-header"><strong>Sửa</strong><span class="small ms-1">thể loại</span></div>
+                    <div class="card-body">
+                        <form  action="#" method="post" enctype="multipart/form-data" class="row g-3" style="padding:20px 20px;">
+                          
+                            <input type="hidden" value="" name="customer_id">
+
+                            <div >
+                                <label for="inputPassword4" class="form-label">Genrename</label>
+                                <input type="text" name="genre_name" value="" class="form-control" id="Genrename">
+                            </div>
+
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary" style="background-color: green">Sửa thể loại</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+
+{% endblock %}
